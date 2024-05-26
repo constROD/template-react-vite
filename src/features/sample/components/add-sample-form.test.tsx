@@ -1,20 +1,15 @@
+import * as createSampleDataModule from '@/shared/data/create-sample';
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi, type Mock } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { AddSampleForm } from './add-sample-form';
 
-type RenderComponentUnderTestProps = {
-  onSubmit?: Mock;
-};
-
 describe('AddSampleForm', () => {
-  const renderComponentUnderTest = ({ onSubmit }: RenderComponentUnderTestProps = {}) => {
-    const mockOnSubmit = onSubmit ?? vi.fn();
-
-    const view = render(<AddSampleForm onSubmit={mockOnSubmit} />);
+  const renderComponentUnderTest = () => {
+    const view = render(<AddSampleForm />);
 
     const events = {
-      onSubmit: mockOnSubmit,
+      createSampleData: vi.spyOn(createSampleDataModule, 'createSampleData'),
     };
     const elements = {
       submitButton: () => screen.getByRole('button', { name: 'Add Sample' }),
@@ -64,7 +59,11 @@ describe('AddSampleForm', () => {
 
     await userEvent.click(elements.submitButton());
 
-    expect(events.onSubmit).toHaveBeenCalledWith(mockFormData, expect.any(Object));
+    expect(events.createSampleData).toHaveBeenCalledWith({
+      title: mockFormData.email,
+      body: mockFormData.description,
+      userId: 1,
+    });
   });
 
   it('should not allow to submit if the form validation is not satisfied', async () => {
@@ -92,6 +91,6 @@ describe('AddSampleForm', () => {
 
     await userEvent.click(elements.submitButton());
 
-    expect(events.onSubmit).not.toHaveBeenCalled();
+    expect(events.createSampleData).not.toHaveBeenCalled();
   });
 });
