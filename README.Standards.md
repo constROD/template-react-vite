@@ -33,6 +33,7 @@
     - `src/shared/components/ui/*` - for shared ui components (`button`, `input` & etc).
   - `src/shared/constants` - for shared constants.
   - `src/shared/data` - for data access layer. (e.g. `api`, `database`).
+  - `src/shared/lib` - for 3rd party integrations libraries.
   - `src/shared/mutation` - for shared `react-query` mutation.
   - `src/shared/query` - for shared `react-query` query. 
   - `src/shared/stores` - for shared zustand stores.
