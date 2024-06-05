@@ -11,7 +11,7 @@
     "prefix": ""
   },
   "aliases": {
-    "components": "@/shared/components",
-    "utils": "@/shared/utils/classnames"
+    "components": "@/components",
+    "utils": "@/utils/classnames"
   }
 }

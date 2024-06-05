@@ -25,17 +25,16 @@
     - `src/features/<feature-name>/constants` - for constants.
     - `src/features/<feature-name>/utils` - for utilities.
 
-### Shared
+### Others
 
-- `src/shared` - shared modules.
-  - `src/shared/assets` - for shared assets.
-  - `src/shared/components` - for shared components.
-    - `src/shared/components/ui/*` - for shared ui components (`button`, `input` & etc).
-  - `src/shared/constants` - for shared constants.
-  - `src/shared/data` - for data access layer. (e.g. `api`, `database`).
-  - `src/shared/lib` - for 3rd party integrations libraries.
-  - `src/shared/mutation` - for shared `react-query` mutation.
-  - `src/shared/query` - for shared `react-query` query. 
-  - `src/shared/stores` - for shared zustand stores.
-  - `src/shared/types` - for shared types.
-  - `src/shared/utils` - for shared utilities.
+  - `src/assets` - for assets.
+  - `src/components` - for shared components.
+    - `src/components/ui/*` - for ui components (`button`, `input` & etc).
+  - `src/constants` - for constants.
+  - `src/data` - for data access layer. (e.g. `api`, `database`).
+  - `src/lib` - for 3rd party integrations libraries.
+  - `src/mutation` - for `react-query` mutation.
+  - `src/query` - for `react-query` query. 
+  - `src/stores` - for zustand stores.
+  - `src/types` - for types.
+  - `src/utils` - for utilities.

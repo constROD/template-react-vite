@@ -1,6 +1,6 @@
 'use client';
 
-import { useSamplesQuery } from '@/shared/query/use-samples-query';
+import { useSamplesQuery } from '@/query/use-samples-query';
 
 export function SampleList() {
   const { data = [], isLoading, isFetching } = useSamplesQuery();

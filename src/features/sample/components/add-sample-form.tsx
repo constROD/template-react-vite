@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@/shared/components/ui/button';
-import { Input } from '@/shared/components/ui/input';
-import { createSampleData } from '@/shared/data/create-sample';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { createSampleData } from '@/data/create-sample';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
