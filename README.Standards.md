@@ -32,11 +32,11 @@
     - `src/components/ui/*` - for ui components (`button`, `input` & etc).
   - `src/constants` - for constants.
   - `src/data` - for data access layer. (e.g. `api`, `database`).
-  - `src/lib` - for 3rd party integrations libraries.
   - `src/hooks` - for custom hooks.
     - `src/hooks/use-<hook-name>.ts` - for custom hook.
     - `src/hooks/mutation/use-<hook-name>.ts` - for `react-query` mutation. 
     - `src/hooks/query/use-<hook-name>.ts` - for `react-query` query.
     - `src/hooks/stores/use-<hook-name>.ts` - for zustand stores.
+  - `src/lib` - for 3rd party integrations libraries.
   - `src/types` - for types.
   - `src/utils` - for utilities.
