@@ -19,7 +19,7 @@
 
 ### Features
 
-- `src/features` - for feature modules.
+- `src/features` - for feature modules. **(Only if needed)**
   - `src/features/<feature-name>` - for feature module.
     - `src/features/<feature-name>/components` - for components.
     - `src/features/<feature-name>/constants` - for constants.
@@ -33,8 +33,10 @@
   - `src/constants` - for constants.
   - `src/data` - for data access layer. (e.g. `api`, `database`).
   - `src/lib` - for 3rd party integrations libraries.
-  - `src/mutation` - for `react-query` mutation.
-  - `src/query` - for `react-query` query. 
-  - `src/stores` - for zustand stores.
+  - `src/hooks` - for custom hooks.
+    - `src/hooks/use-<hook-name>.ts` - for custom hook.
+    - `src/hooks/mutation/use-<hook-name>.ts` - for `react-query` mutation. 
+    - `src/hooks/query/use-<hook-name>.ts` - for `react-query` query.
+    - `src/hooks/stores/use-<hook-name>.ts` - for zustand stores.
   - `src/types` - for types.
   - `src/utils` - for utilities.

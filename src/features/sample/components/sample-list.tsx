@@ -1,6 +1,6 @@
 'use client';
 
-import { useSamplesQuery } from '@/query/use-samples-query';
+import { useSamplesQuery } from '@/hooks/query/use-samples-query';
 
 export function SampleList() {
   const { data = [], isLoading, isFetching } = useSamplesQuery();
@@ -14,7 +14,7 @@ export function SampleList() {
           <div>ID: {sample.id}</div>
           <div>TITLE: {sample.title}</div>
           <div>BODY: {sample.body}</div>
-          <div>USERID: {sample.userId}</div>
+          <div>USER ID: {sample.userId}</div>
         </div>
       ))}
     </div>
