@@ -1,8 +1,5 @@
 # Stage 1: Base stage with Node.js Alpine image
-FROM node:20-alpine AS base
-
-# Stage 2: Builder stage starts from the base image
-FROM base AS builder
+FROM node:20-alpine AS builder
 
 # Install libc6-compat for compatibility and globally install specific pnpm version
 RUN apk add --no-cache libc6-compat && \
@@ -23,31 +20,23 @@ COPY . .
 # Build the application
 RUN pnpm run build
 
-# Stage 3: Runner stage starts from the base image again
-FROM base AS runner
-
-# Install Nginx
-RUN apk add --no-cache nginx
+# Stage 2: Runner stage starts from the nginx:alpine image
+FROM nginx:alpine AS runner
 
 # Set the working directory in the container
-WORKDIR /runner
+WORKDIR /usr/share/nginx/html
 
-# Create a non-root group and user for running the application securely
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 bossrod
+# Remove the default Nginx static assets
+RUN rm -rf ./*
 
 # Copy built artifacts from the builder stage
-# Change ownership to the non-root user and group created above
-COPY --from=builder --chown=bossrod:nodejs /builder/dist /runner/dist
+COPY --from=builder /builder/dist /usr/share/nginx/html
 
 # Copy the Nginx configuration file
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Switch to non-root user for security
-USER bossrod
-
-# Inform Docker that the container is listening on port 3000 at runtime
-EXPOSE 3000
+# Inform Docker that the container is listening on port 80 at runtime
+EXPOSE 80
 
 # Define the command to run the app
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

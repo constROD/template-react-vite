@@ -1,5 +1,3 @@
-version: '3'
-
 name: template-react-vite
 
 services:
@@ -8,4 +6,4 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '3000:3000'
+      - '3000:80'
