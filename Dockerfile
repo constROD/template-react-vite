@@ -27,23 +27,28 @@ RUN pnpm run build && \
 # Stage 3: Runner stage starts from the base image again
 FROM base AS runner
 
+# Install Nginx
+RUN apk add --no-cache nginx
+
 # Set the working directory in the container
 WORKDIR /runner
 
 # Create a non-root group and user for running the application securely
 RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 react
+RUN adduser --system --uid 1001 bossrod
 
-# Copy installed node_modules and built artifacts from the builder stage
+# Copy built artifacts from the builder stage
 # Change ownership to the non-root user and group created above
-COPY --from=builder --chown=react:nodejs /builder/node_modules /runner/node_modules
-COPY --from=builder --chown=react:nodejs /builder/dist /runner/dist
+COPY --from=builder --chown=bossrod:nodejs /builder/dist /runner/dist
+
+# Copy the Nginx configuration file
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Switch to non-root user for security
-USER react
+USER bossrod
 
 # Inform Docker that the container is listening on port 3000 at runtime
 EXPOSE 3000
 
 # Define the command to run the app
-CMD ["npx", "serve", "-s", "/runner/dist"]
+CMD ["nginx", "-g", "daemon off;"]

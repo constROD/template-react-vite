@@ -2,5 +2,5 @@
   "version": "0.2",
   "language": "en",
   "words": ["commitlint", "pnpm", "tanstack", "Todos", "zustand"],
-  "ignorePaths": ["node_modules/", "build/", ".husky", "pnpm-lock.yaml", "package.json"]
+  "ignorePaths": ["node_modules/", "dist/", ".husky", "pnpm-lock.yaml", "package.json"]
 }
