@@ -25,3 +25,9 @@ dist-ssr
 # custom
 *-lock.json
 *.lock
+
+# env
+.env
+.env.*
+.env-*
+!**.example
