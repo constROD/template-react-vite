@@ -38,5 +38,6 @@
     - `src/hooks/query/use-<hook-name>.ts` - for `react-query` query.
     - `src/hooks/stores/use-<hook-name>.ts` - for zustand stores.
   - `src/lib` - for 3rd party integrations libraries.
+  - `src/services` - for business logic and orchestration of data access layer. **(Only if needed or doing fullstack)**
   - `src/types` - for types.
   - `src/utils` - for utilities.
