@@ -4,6 +4,10 @@
 
 This is a template for a React project using **React**, **vite**, **Tanstack Router**, **Tanstack Query** and **Zustand**. It includes **ESLint**, **Prettier**, and **Husky** for code quality and linting.
 
+## Rules
+
+Please read the repo **Standards** here [README.Standards.md](./README.Standards.md)
+
 ## Clone
 
 ```bash
@@ -38,6 +42,4 @@ pnpm build
 pnpm start
 ```
 
-## Rules
 
-Please read the repo **Standards** here [README.Standards.md](./README.Standards.md)
