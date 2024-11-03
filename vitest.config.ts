@@ -15,8 +15,8 @@ export default defineConfig({
     },
     setupFiles: ['./src/vitest-setup.ts'],
     poolOptions: {
-      threads: {
-        singleThread: true,
+      forks: {
+        singleFork: true,
       },
     },
   },

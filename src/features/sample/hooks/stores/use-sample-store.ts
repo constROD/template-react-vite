@@ -5,8 +5,8 @@ export interface SampleStore {
   /* States */
   data?: unknown;
 
-  /* Functions */
-  setData: (data?: unknown) => void;
+  /* Events */
+  setDataEvent: (data?: unknown) => void;
 }
 
 export const useSampleStore = create(
@@ -14,8 +14,8 @@ export const useSampleStore = create(
     /* States */
     data: undefined,
 
-    /* Functions */
-    setData: data => {
+    /* Events */
+    setDataEvent: data => {
       set(state => {
         state.data = data;
       });
