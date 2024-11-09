@@ -1,7 +1,6 @@
 node_modules/
 dist/
 dist-ssr/
-
 coverage/
 
 *.config.js
@@ -12,5 +11,13 @@ coverage/
 *-lock.json
 *-lock.yaml
 *.lock
+
+.env
+.env.*
+.env-*
+
+**/data/core
+**/data/index.ts
+**/data/*.gen.ts
 
 src/routeTree.gen.ts
