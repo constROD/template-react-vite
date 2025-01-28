@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { deleteSampleData } from '@/features/sample/data/delete-sample';
+import { deleteSampleData } from '@/features/sample/_data/delete-sample';
 
 export type UseSampleDeleteMutationArgs = {
   onSuccess?: () => void;

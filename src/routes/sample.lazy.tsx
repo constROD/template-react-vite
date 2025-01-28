@@ -1,5 +1,5 @@
-import { AddSampleForm } from '@/features/sample/components/add-sample-form';
-import { SampleList } from '@/features/sample/components/sample-list';
+import { AddSampleForm } from '@/features/sample/_components/add-sample-form';
+import { SampleList } from '@/features/sample/_components/sample-list';
 import { createLazyFileRoute } from '@tanstack/react-router';
 
 export const Route = createLazyFileRoute('/sample')({

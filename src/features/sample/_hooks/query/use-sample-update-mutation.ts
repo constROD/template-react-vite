@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { updateSampleData } from '@/features/sample/data/update-sample';
+import { updateSampleData } from '@/features/sample/_data/update-sample';
 
 export type UseSampleUpdateMutationArgs = {
   onSuccess?: () => void;
