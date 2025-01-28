@@ -37,8 +37,8 @@
   - `src/hooks/query/use-<hook-name>-query.ts` - for shared `react-query` query. **(Only if necessary)**
   - `src/hooks/query/use-<hook-name>-mutation.ts` - for shared `react-query` mutation. **(Only if necessary)**
 - `src/lib` - for shared 3rd party integrations libraries.
-- `src/stores` - for shared stores module. (e.g. `zustand`)
 - `src/services` - for shared business logic and orchestration of data access layer. **(Only if necessary)**
+- `src/stores` - for shared stores module. (e.g. `zustand`)
 - `src/types` - for shared types.
 - `src/utils` - for shared utilities.
 
@@ -60,7 +60,7 @@
   - `src/features/<feature-name>/_data` - for feature's data access layer. **(Only if necessary)**
   - `src/features/<feature-name>/_hooks` - for feature's custom hooks, tanstack query and mutation. **(Only if necessary)**
   - `src/features/<feature-name>/_lib` - for feature's 3rd party integrations libraries. **(Only if necessary)**
-  - `src/features/<feature-name>/_stores` - for feature's stores. (e.g. `zustand`)
   - `src/features/<feature-name>/_services` - for feature's business logic and orchestration of data access layer. **(Only if necessary)**
+  - `src/features/<feature-name>/_stores` - for feature's stores. (e.g. `zustand`)
   - `src/features/<feature-name>/_types` - for feature's types.
   - `src/features/<feature-name>/_utils` - for feature's utilities.
