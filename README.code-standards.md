@@ -1,7 +1,5 @@
 # Standards
 
-# Standards
-
 ## Naming conventions
 - `kebab-case` - for all folders/files.
 - `_kebab-case` - for feature and route domain's specific common modules.
