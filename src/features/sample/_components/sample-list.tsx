@@ -3,9 +3,11 @@
 import { useSamplesQuery } from '../_hooks/query/use-samples-query';
 
 export function SampleList() {
-  const { data = [], isLoading, isFetching } = useSamplesQuery();
+  const { data = [], isLoading, isFetching, error } = useSamplesQuery();
 
   if (isLoading || isFetching) return <div>Loading...</div>;
+
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <div className="flex flex-col gap-5">
