@@ -1,4 +1,4 @@
-# Standards
+# Project Structure & Code Organization
 
 ## Naming conventions
 - `kebab-case` - for all folders/files.

@@ -6,7 +6,7 @@ This is a template for a React project using **React**, **vite**, **Tanstack Rou
 
 ## Rules
 
-Please read the repo **Code Standards** here [README.code-standards.md](./README.code-standards.md)
+Please read the repo's **Project Structure & Code Organization** here [README.project-structure.md](./README.project-structure.md)
 
 ## Clone
 
