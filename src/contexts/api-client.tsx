@@ -1,21 +1,21 @@
 // import { getSamplesData } from '@/features/sample/_data/get-samples';
 // import { createContext, type ReactNode, useContext } from 'react';
 
-// export type ApiClientContext = {
+// export type ApiClientContextState = {
 //   searchSample: typeof getSamplesData;
 // };
 
-// export function createApiClientContext(): ApiClientContext {
+// export function createApiClientContext(): ApiClientContextState {
 //   return {
 //     searchSample: getSamplesData,
 //   };
 // }
 
-// const ApiClientContext = createContext<ApiClientContext | null>(null);
+// const ApiClientContext = createContext<ApiClientContextState | null>(null);
 
 // export type ApiClientProviderProps = {
 //   children: ReactNode;
-//   client?: ApiClientContext;
+//   client?: ApiClientContextState;
 // };
 
 // export function ApiClientProvider({ children, client }: ApiClientProviderProps) {

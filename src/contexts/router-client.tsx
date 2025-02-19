@@ -8,21 +8,21 @@
 //   query: Record<string, string | string[] | undefined>;
 // };
 
-// export type RouterClientContext = {
+// export type RouterClientContextState = {
 //   useRouter: () => UseRouterClientContext;
 // };
 
-// export function createRouterClientContext(): RouterClientContext {
+// export function createRouterClientContext(): RouterClientContextState {
 //   return {
 //     useRouter: () => useRouter(),
 //   };
 // }
 
-// const RouterClientContext = createContext<RouterClientContext | null>(null);
+// const RouterClientContext = createContext<RouterClientContextState | null>(null);
 
 // export type RouterClientProviderProps = {
 //   children: ReactNode;
-//   client?: RouterClientContext;
+//   client?: RouterClientContextState;
 // };
 
 // export function RouterClientProvider({ children, client }: RouterClientProviderProps) {

@@ -1,23 +1,23 @@
 // import { createContext, type ReactNode, useContext } from 'react';
 // import { toast } from 'react-toastify';
 
-// export type ToastClientContext = {
+// export type ToastClientContextState = {
 //   success: (message: string) => void;
 //   error: (message: string) => void;
 // };
 
-// export function createToastClientContext(): ToastClientContext {
+// export function createToastClientContext(): ToastClientContextState {
 //   return {
 //     success: message => toast.success(message),
 //     error: message => toast.error(message),
 //   };
 // }
 
-// const ToastClientContext = createContext<ToastClientContext | null>(null);
+// const ToastClientContext = createContext<ToastClientContextState | null>(null);
 
 // export type ToastClientProviderProps = {
 //   children: ReactNode;
-//   client?: ToastClientContext;
+//   client?: ToastClientContextState;
 // };
 
 // export function ToastClientProvider({ children, client }: ToastClientProviderProps) {
