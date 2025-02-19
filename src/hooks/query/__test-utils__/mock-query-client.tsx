@@ -1,5 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
+// import { ApiClientProvider } from '@/contexts/api-client';
+// import { mockApiClient } from '@/contexts/__test-utils__/mock-api-client';
 
 const createTestQueryClient = () =>
   new QueryClient({
@@ -33,4 +35,14 @@ export function renderWithQueryClient(ui: React.ReactElement) {
 export function queryClientWrapper({ children }: { children: React.ReactNode }) {
   const testQueryClient = createTestQueryClient();
   return <QueryClientProvider client={testQueryClient}>{children}</QueryClientProvider>;
+}
+
+export function queryClientHookWrapper({ children }: { children: React.ReactNode }) {
+  const testQueryClient = createTestQueryClient();
+  return (
+    <QueryClientProvider client={testQueryClient}>
+      {/* <ApiClientProvider client={mockApiClient}>{children}</ApiClientProvider> */}
+      {children}
+    </QueryClientProvider>
+  );
 }

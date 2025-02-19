@@ -27,15 +27,14 @@
 
 ### Shared Modules
 - `src/assets` - for shared assets module.
-- `src/components` - for shared components module.
+- `src/components` - for shared dumb components module.
   - `src/components/ui/*` - for ui components (`button`, `input` & etc).
 - `src/constants` - for shared constants module.
 - `src/contexts` - for shared react context api module.
 - `src/data` - for shared data access layer module. (e.g. `api`, `database`).
 - `src/hooks` - for shared custom hooks, tanstack query and mutation
   - `src/hooks/use-<hook-name>.ts` - for shared custom hook.
-  - `src/hooks/query/use-<hook-name>-query.ts` - for shared `react-query` query. **(Only if necessary)**
-  - `src/hooks/query/use-<hook-name>-mutation.ts` - for shared `react-query` mutation. **(Only if necessary)**
+  - `src/hooks/query/use-<query-or-mutation-hook-name>.ts` - for shared `react-query` query/mutation hook. **(Only if necessary)**
 - `src/lib` - for shared 3rd party integrations libraries.
 - `src/services` - for shared business logic and orchestration of data access layer. **(Only if necessary)**
 - `src/stores` - for shared stores module. (e.g. `zustand`)
