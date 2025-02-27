@@ -2,7 +2,7 @@
 
 ## Naming conventions
 - `kebab-case` - for all folders/files.
-- `_kebab-case` - for feature and route domain's specific common modules.
+- `_kebab-case` - for feature's specific common modules.
 - `PascalCase` - for classes and types.
 - `snake_case` - for database tables and columns.
 - `camelCase` - for functions, zod schemas and etc.
@@ -41,16 +41,6 @@
 - `src/stores` - for shared stores module. (e.g. `zustand`)
 - `src/types` - for shared types.
 - `src/utils` - for shared utilities.
-
-### Routes Domain
-- `src/routes/<route-name>` - for route domain.
-  - `src/routes/<route-name>/index.tsx` - for route's entry point.
-  - `src/routes/<route-name>/_components` - for route's components module.
-  - `src/routes/<route-name>/_constants` - for route's constants module.
-  - `src/routes/<route-name>/_contexts` - for route's react context api module.
-  - `src/routes/<route-name>/_hooks` - for route's hooks module.
-  - `src/routes/<route-name>/_types` - for route's types module.
-  - `src/routes/<route-name>/_utils` - for route's utilities module.
 
 ### Features Domain
 - `src/features/<feature-name>` - for feature.
