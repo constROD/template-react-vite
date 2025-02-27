@@ -1,8 +1,8 @@
 import { AddSampleForm } from '@/features/sample/_components/add-sample-form';
 import { SampleList } from '@/features/sample/_components/sample-list';
-import { createLazyFileRoute } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createLazyFileRoute('/sample')({
+export const Route = createFileRoute('/sample')({
   component: SamplePage,
 });
 

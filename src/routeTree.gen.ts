@@ -8,30 +8,25 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router';
-
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root';
-
-// Create Virtual Routes
-
-const SampleLazyImport = createFileRoute('/sample')();
-const IndexLazyImport = createFileRoute('/')();
+import { Route as SampleImport } from './routes/sample';
+import { Route as IndexImport } from './routes/index';
 
 // Create/Update Routes
 
-const SampleLazyRoute = SampleLazyImport.update({
+const SampleRoute = SampleImport.update({
   id: '/sample',
   path: '/sample',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/sample.lazy').then(d => d.Route));
+} as any);
 
-const IndexLazyRoute = IndexLazyImport.update({
+const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/index.lazy').then(d => d.Route));
+} as any);
 
 // Populate the FileRoutesByPath interface
 
@@ -41,14 +36,14 @@ declare module '@tanstack/react-router' {
       id: '/';
       path: '/';
       fullPath: '/';
-      preLoaderRoute: typeof IndexLazyImport;
+      preLoaderRoute: typeof IndexImport;
       parentRoute: typeof rootRoute;
     };
     '/sample': {
       id: '/sample';
       path: '/sample';
       fullPath: '/sample';
-      preLoaderRoute: typeof SampleLazyImport;
+      preLoaderRoute: typeof SampleImport;
       parentRoute: typeof rootRoute;
     };
   }
@@ -57,19 +52,19 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexLazyRoute;
-  '/sample': typeof SampleLazyRoute;
+  '/': typeof IndexRoute;
+  '/sample': typeof SampleRoute;
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexLazyRoute;
-  '/sample': typeof SampleLazyRoute;
+  '/': typeof IndexRoute;
+  '/sample': typeof SampleRoute;
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute;
-  '/': typeof IndexLazyRoute;
-  '/sample': typeof SampleLazyRoute;
+  '/': typeof IndexRoute;
+  '/sample': typeof SampleRoute;
 }
 
 export interface FileRouteTypes {
@@ -82,13 +77,13 @@ export interface FileRouteTypes {
 }
 
 export interface RootRouteChildren {
-  IndexLazyRoute: typeof IndexLazyRoute;
-  SampleLazyRoute: typeof SampleLazyRoute;
+  IndexRoute: typeof IndexRoute;
+  SampleRoute: typeof SampleRoute;
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexLazyRoute: IndexLazyRoute,
-  SampleLazyRoute: SampleLazyRoute,
+  IndexRoute: IndexRoute,
+  SampleRoute: SampleRoute,
 };
 
 export const routeTree = rootRoute
@@ -106,10 +101,10 @@ export const routeTree = rootRoute
       ]
     },
     "/": {
-      "filePath": "index.lazy.tsx"
+      "filePath": "index.tsx"
     },
     "/sample": {
-      "filePath": "sample.lazy.tsx"
+      "filePath": "sample.tsx"
     }
   }
 }

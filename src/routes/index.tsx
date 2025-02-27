@@ -1,7 +1,7 @@
 import { envConfig } from '@/env';
-import { createLazyFileRoute } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createLazyFileRoute('/')({
+export const Route = createFileRoute('/')({
   component: IndexPage,
 });
 
