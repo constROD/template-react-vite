@@ -22,6 +22,7 @@
       "error",
       { "props": "never", "children": "never", "propElementValues": "always" }
     ],
+    "react/prop-types": "off",
 
     /* TypeScript */
     "@typescript-eslint/consistent-type-imports": [
