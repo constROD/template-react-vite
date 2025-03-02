@@ -1,51 +1,40 @@
-// import { useQueryClient } from '@tanstack/react-query';
-// import { useRouter } from 'expo-router';
-import { createContext, useCallback, useContext, useMemo, type ReactNode } from 'react';
-
-// import { ROUTES } from '@/constants/routes';
-// import { useProfileQuery } from '@/hooks/query/me/use-profile-query';
-// import { privateAxios } from '@/lib/axios';
-// import { useSessionStore } from '@/stores/use-session-store';
+import { type AuthenticatedUser } from '@/types/auth';
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 
 export type AuthContextState = {
-  logout: () => Promise<void>;
+  isAuthenticated: boolean;
+  user: null | AuthenticatedUser;
+  login: (email: string, password: string) => void;
+  logout: () => void;
 };
 
 const AuthContext = createContext<AuthContextState | undefined>(undefined);
 
-export function AuthContextProvider({ children }: { children: ReactNode }) {
-  // const router = useRouter();
-  // const queryClient = useQueryClient();
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<AuthenticatedUser | null>(null);
 
-  // const accessToken = useSessionStore(state => state.accessToken);
-  // const sessionStoreEvents = useSessionStore(state => ({
-  //   setAccessToken: state.setAccessToken,
-  //   clearSession: state.clearSession,
-  // }));
+  const isAuthenticated = !!user;
 
-  const logout = useCallback(async () => {
-    // await queryClient.resetQueries();
-    // sessionStoreEvents.clearSession();
-    // router.replace(ROUTES.AUTH.LOGIN);
-  }, []);
+  const login = (email: string, password: string) => {
+    void password;
+    setUser({ id: '1', email, name: 'Test User', role: 'Admin' });
+    setStoredUser(email);
+  };
 
-  // const { refetch: refetchProfile } = useProfileQuery();
+  const logout = () => {
+    setUser(null);
+    setStoredUser(null);
+  };
 
-  // useEffect(() => {
-  //   const verifySession = async () => {
-  //     try {
-  //       const response = await privateAxios.get(`/auth/verify-session`);
-  //       sessionStoreEvents.setAccessToken(response.data.access_token);
-  //       await refetchProfile();
-  //     } catch {
-  //       sessionStoreEvents.clearSession();
-  //     }
-  //   };
+  // Load user from localStorage only once on mount
+  useEffect(() => {
+    const storedUser = getStoredUser();
+    if (storedUser) {
+      setUser({ id: '1', email: storedUser, name: 'Test User', role: 'Admin' });
+    }
+  }, []); // Empty dependency array means this runs once on mount
 
-  //   verifySession();
-  // }, [accessToken]);
-
-  const contextValue = useMemo(() => ({ logout }), [logout]);
+  const contextValue: AuthContextState = { isAuthenticated, user, login, logout };
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 }
@@ -53,7 +42,21 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
 export function useAuthContext() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuthContext must be used within an AuthContextProvider');
+    throw new Error('useAuthContext must be used within an AuthProvider');
   }
   return context;
+}
+
+const key = 'tanstack.auth.user';
+
+function getStoredUser() {
+  return localStorage.getItem(key);
+}
+
+function setStoredUser(user: string | null) {
+  if (user) {
+    localStorage.setItem(key, user);
+  } else {
+    localStorage.removeItem(key);
+  }
 }

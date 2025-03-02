@@ -5,7 +5,9 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   plugins: [
     TanStackRouterVite({
+      target: 'react',
       autoCodeSplitting: true,
+      routeToken: 'layout',
     }),
     react(),
   ],

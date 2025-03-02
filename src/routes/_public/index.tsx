@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { ArrowRight } from 'lucide-react';
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute('/_public/')({
   component: IndexPage,
 });
 

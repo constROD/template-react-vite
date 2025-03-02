@@ -3,7 +3,7 @@ import { AddSampleForm } from '@/features/sample/_components/add-sample-form';
 import { SampleList } from '@/features/sample/_components/sample-list';
 import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/sample')({
+export const Route = createFileRoute('/_protected/sample')({
   component: SamplePage,
 });
 

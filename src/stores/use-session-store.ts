@@ -3,21 +3,26 @@ import { immer } from 'zustand/middleware/immer';
 
 export type Session = { access_token: string };
 
-export interface SessionStore {
-  /* States */
+export type SessionStoreState = {
   session: null | Session;
+};
 
-  /* Events */
-  setSessionEvent: (session: null | Session) => void;
-}
+export type SessionStoreActions = {
+  setSession: (session: null | Session) => void;
+};
+
+export const DEFAULT_SESSION_STORE_STATE: SessionStoreState = {
+  session: null,
+};
+
+export type SessionStore = SessionStoreState & SessionStoreActions;
 
 export const useSessionStore = create(
   immer<SessionStore>(set => ({
-    /* States */
-    session: null,
+    ...DEFAULT_SESSION_STORE_STATE,
 
-    /* Events */
-    setSessionEvent: data => {
+    /* Actions */
+    setSession: data => {
       set(state => {
         state.session = data;
       });
