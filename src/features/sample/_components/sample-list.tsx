@@ -1,9 +1,9 @@
 import { useSamplesQuery } from '../_hooks/query/use-samples-query';
 
 export function SampleList() {
-  const { data = [], isLoading, isFetching, error } = useSamplesQuery();
+  const { data = [], isLoading, error } = useSamplesQuery();
 
-  if (isLoading || isFetching)
+  if (isLoading)
     return (
       <div className="flex items-center justify-center py-10 text-muted-foreground">Loading...</div>
     );

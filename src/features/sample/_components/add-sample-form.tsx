@@ -2,10 +2,10 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { createSampleData } from '@/features/sample/_data/create-sample';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { useCreateSampleMutation } from '../_hooks/query/use-create-sample-mutation';
 import { useSampleStore } from '../_stores/use-sample-store';
 
 export const addSampleSchema = z.object({
@@ -22,22 +22,17 @@ export const AddSampleForm = () => {
   });
   const { data } = useSampleStore();
 
+  const { mutate: createSampleMutate, isPending } = useCreateSampleMutation();
+
   // eslint-disable-next-line no-console
   console.log('Sample Store Data: ', data);
 
   const onSubmit = async (data: AddSample) => {
-    try {
-      const createdSample = await createSampleData({
-        title: data.email,
-        body: data.description,
-        userId: 1,
-      });
-      // eslint-disable-next-line no-console
-      console.log(createdSample);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error creating sample:', error);
-    }
+    createSampleMutate({
+      title: data.email,
+      body: data.description,
+      userId: 1,
+    });
   };
 
   return (
@@ -49,7 +44,9 @@ export const AddSampleForm = () => {
         error={formState.errors.description?.message}
         {...register('description')}
       />
-      <Button type="submit">Add Sample</Button>
+      <Button type="submit" disabled={isPending}>
+        {isPending ? 'Adding...' : 'Add Sample'}
+      </Button>
     </form>
   );
 };

@@ -1,0 +1,201 @@
+---
+description: Guidelines for Mutation Hooks
+globs: **/hooks/query/**/*.ts, **/_hooks/query/**/*.ts
+alwaysApply: false
+---
+# Guidelines for Mutation Hooks
+
+## Purpose and Overview
+Mutation hooks abstract data modification operations (create, update, delete) using TanStack Query's useMutation hook. They provide loading states, error handling, and optimistic updates. These hooks connect UI components to the data access layer for write operations, keeping components focused on presentation rather than data manipulation logic.
+
+## Structure and Organization
+
+### Mutation Hooks Module Structure
+```
+src/
+├── hooks/                      # Shared hooks module
+│   └── query/                  # Shared query hooks (includes mutations)
+│       ├── use-create-[entity]-mutation.ts    # Create operation
+│       ├── use-update-[entity]-mutation.ts    # Update operation
+│       └── use-delete-[entity]-mutation.ts    # Delete operation
+└── features/
+    └── [feature-name]/
+        └── _hooks/             # Feature-specific hooks
+            └── query/          # Feature-specific query hooks (includes mutations)
+                ├── use-create-[entity]-mutation.ts
+                ├── use-update-[entity]-mutation.ts
+                └── use-delete-[entity]-mutation.ts
+```
+
+## Naming Conventions
+
+### Files
+- `use-create-[entity]-mutation.ts`: For create operations
+- `use-update-[entity]-mutation.ts`: For update operations
+- `use-delete-[entity]-mutation.ts`: For delete operations
+
+### Functions
+- `useCreate[Entity]Mutation`: For create operations
+- `useUpdate[Entity]Mutation`: For update operations
+- `useDelete[Entity]Mutation`: For delete operations
+
+### Types
+- `UseCreate[Entity]MutationArgs`: Arguments for create mutation hook
+- `UseUpdate[Entity]MutationArgs`: Arguments for update mutation hook
+- `UseDelete[Entity]MutationArgs`: Arguments for delete mutation hook
+
+## Implementation Guidelines
+
+### Mutation Hooks
+- Use TanStack Query's `useMutation` hook
+- Connect to the data access layer through context or direct import
+- Accept optional configuration for callbacks (onSuccess, onError, etc.)
+- Forward configuration options to the underlying useMutation hook
+- Document the expected input and output types
+
+### Example Mutation Hook
+```jsx
+import { type MutationOptions, useMutation, useQueryClient } from '@tanstack/react-query';
+
+import {
+  type CreateSampleDataArgs,
+  type createSampleData,
+} from '@/data/create-sample';
+import { useApiClientContext } from '@/contexts/api-client';
+
+export type UseCreateSampleMutationArgs = MutationOptions<
+  Awaited<ReturnType<typeof createSampleData>>,
+  Error,
+  CreateSampleDataArgs
+>;
+
+export function useCreateSampleMutation(args: UseCreateSampleMutationArgs = {}) {
+  const apiClient = useApiClientContext();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: apiClient.createSampleData,
+    onSuccess: async (data, params, context) => {
+      queryClient.invalidateQueries({ queryKey: ['/samples', params.id] });
+      if (args?.onSuccess) return args.onSuccess(data, params, context);
+    },
+    onError: (error, variables, context) => {
+      if (args?.onError) return args.onError(error, variables, context);
+    },
+  });
+}
+```
+
+### Example Mutation Hook Test
+```jsx
+import { testMocksWrapper } from '@/utils/__test-utils__/test-mocks-wrapper';
+import { renderHook, waitFor } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { mockApiClient } from '@/contexts/__test-utils__/mock-sample-api-client';
+import { makeFakeSample } from '@/data/__test-utils__/make-fake-sample';
+import {
+  useCreateSampleMutation,
+  type UseCreateSampleMutationArgs,
+} from './use-create-sample-mutation';
+
+const mockSample = makeFakeSample();
+const mockCreateSampleData = {
+  title: mockSample.title,
+  body: mockSample.body,
+  userId: mockSample.userId,
+};
+
+function renderTestHook(args: UseCreateSampleMutationArgs = {}) {
+  return renderHook(() => useCreateSampleMutation(args), {
+    wrapper: testMocksWrapper,
+  });
+}
+
+describe('useCreateSampleMutation', () => {
+  it('should create sample data', async () => {
+    mockApiClient.createSampleData.mockResolvedValueOnce(mockSample);
+
+    const { result } = renderTestHook();
+
+    result.current.mutate(mockCreateSampleData);
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+
+    expect(mockApiClient.createSampleData).toHaveBeenCalledWith(mockCreateSampleData);
+    expect(mockApiClient.createSampleData).toHaveBeenCalledTimes(1);
+    expect(result.current.data).toEqual(mockSample);
+  });
+
+  it('should handle error state', async () => {
+    const error = new Error('Failed to create sample');
+    mockApiClient.createSampleData.mockRejectedValueOnce(error);
+
+    const { result } = renderTestHook();
+
+    result.current.mutate(mockCreateSampleData);
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+
+    expect(result.current.error).toBeDefined();
+  });
+
+  it('should call onSuccess callback when provided', async () => {
+    mockApiClient.createSampleData.mockResolvedValueOnce(mockSample);
+
+    const onSuccessMock = vi.fn();
+    const { result } = renderTestHook({
+      onSuccess: onSuccessMock,
+    });
+
+    result.current.mutate(mockCreateSampleData);
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+
+    expect(onSuccessMock).toHaveBeenCalledWith(mockSample, mockCreateSampleData, undefined);
+  });
+
+  it('should call onError callback when provided', async () => {
+    const error = new Error('Failed to create sample');
+    mockApiClient.createSampleData.mockRejectedValueOnce(error);
+
+    const onErrorMock = vi.fn();
+    const { result } = renderTestHook({
+      onError: onErrorMock,
+    });
+
+    result.current.mutate(mockCreateSampleData);
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+
+    expect(onErrorMock).toHaveBeenCalledWith(error, mockCreateSampleData, undefined);
+  });
+});
+```
+
+## Best Practices
+
+### Cache Invalidation
+- Implement appropriate cache invalidation in onSuccess
+- Consider which queries need to be invalidated after a mutation
+- Use queryClient.invalidateQueries for cache invalidation
+
+### Error Handling
+- Implement appropriate error handling strategies
+- Forward errors to the consuming components
+- Consider global error handling for common error scenarios
+
+### Side Effects
+- Keep side effects (like showing toast notifications) in the component using the mutation
+- Use the onSuccess and onError callbacks for side effects
+
+### Mutation States
+- Expose and use mutation states (isLoading, isError, isSuccess) in UI components
+- Handle different states appropriately in the UI

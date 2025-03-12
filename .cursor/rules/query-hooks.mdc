@@ -1,0 +1,149 @@
+---
+description: Guidelines for Query Hooks
+globs: **/hooks/query/**/*.ts, **/_hooks/query/**/*.ts
+alwaysApply: false
+---
+# Guidelines for Query Hooks
+
+## Purpose and Overview
+Query hooks abstract data fetching operations using TanStack Query to provide optimized caching, loading states, error handling, and refetching strategies. They connect UI components to the data access layer, making components cleaner and more focused on presentation rather than data fetching logic.
+
+## Structure and Organization
+
+### Query Hooks Module Structure
+```
+src/
+├── hooks/                  # Shared hooks module
+│   └── query/              # Shared query hooks
+│       ├── use-[entity]-query.ts      # Query for single entity
+│       └── use-[entity]s-query.ts     # Query for multiple entities
+└── features/
+    └── [feature-name]/
+        └── _hooks/         # Feature-specific hooks
+            └── query/      # Feature-specific query hooks
+                ├── use-[entity]-query.ts
+                └── use-[entity]s-query.ts
+```
+
+## Naming Conventions
+
+### Files
+- `use-[entity]-query.ts`: For querying a single entity
+- `use-[entity]s-query.ts`: For querying multiple entities
+
+### Functions
+- `use[Entity]Query`: For querying a single entity
+- `use[Entity]sQuery`: For querying multiple entities
+
+### Types
+- `Use[Entity]QueryArgs`: Arguments for single entity query
+- `Use[Entity]sQueryArgs`: Arguments for multiple entities query (if needed)
+
+## Implementation Guidelines
+
+### Query Hooks
+- Use TanStack Query's `useQuery` hook
+- Connect to the data access layer through context or direct import
+- Define appropriate query keys for proper caching
+- Structure the hook to handle loading, success, and error states
+- Document the return type of the hook
+- Consider implementing enabled/disabled logic when appropriate
+
+### Query Key Structure
+- Use descriptive and hierarchical query keys
+- Include relevant parameters in query keys for proper cache invalidation
+- Follow the pattern: `[endpoint, ...params]`
+
+### Example Query Hook
+```jsx
+import { useQuery } from '@tanstack/react-query';
+import { type GetSampleDataArgs } from '@/data/get-sample';
+import { useApiClientContext } from '@/contexts/api-client';
+export type UseSampleQueryArgs = GetSampleDataArgs & {
+  enabled?: boolean;
+};
+
+export function useSampleQuery(args: UseSampleQueryArgs) {
+  const apiClient = useApiClientContext();
+
+  return useQuery({
+    queryKey: ['/samples', args.id],
+    queryFn: () => apiClient.getSampleData({ id: args.id }),
+    enabled: args.enabled ?? !!args.id,
+  });
+}
+```
+
+### Example Query Hook Test
+```jsx
+import { testMocksWrapper } from '@/utils/__test-utils__/test-mocks-wrapper';
+import { renderHook, waitFor } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import { mockApiClient } from '@/contexts/__test-utils__/mock-sample-api-client';
+import { makeFakeSample } from '@/data/__test-utils__/make-fake-sample';
+import { useSampleQuery, type UseSampleQueryArgs } from './use-sample-query';
+
+const mockSample = makeFakeSample();
+
+function renderTestHook(args: UseSampleQueryArgs) {
+  return renderHook(() => useSampleQuery(args), {
+    wrapper: testMocksWrapper,
+  });
+}
+
+describe('useSampleQuery', () => {
+  it('should fetch sample data', async () => {
+    mockApiClient.getSampleData.mockResolvedValueOnce(mockSample);
+
+    const { result } = renderTestHook({ id: mockSample.id });
+
+    expect(result.current.isLoading).toBe(true);
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+
+    expect(mockApiClient.getSampleData).toHaveBeenCalledWith({ id: mockSample.id });
+    expect(mockApiClient.getSampleData).toHaveBeenCalledTimes(1);
+
+    expect(result.current.data).toEqual(mockSample);
+  });
+
+  it('should handle error state', async () => {
+    const error = new Error('Failed to fetch codes');
+    mockApiClient.getSampleData.mockRejectedValueOnce(error);
+
+    const { result } = renderTestHook({ id: mockSample.id });
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+
+    expect(result.current.error).toBeDefined();
+  });
+});
+```
+
+## Best Practices
+
+### Performance Considerations
+- Implement appropriate staleTime and cacheTime based on data volatility
+- Use suspense mode when applicable for concurrent rendering
+- Consider implementing placeholderData or initialData for better UX
+
+### Error Handling
+- Implement appropriate error handling strategies
+- Consider using onError callbacks for specific error handling logic
+- Document possible error scenarios
+
+### Dependent Queries
+- Use the enabled option to control when a query should run
+- Chain queries using the data from one query as input for another
+
+### Prefetching
+- Implement prefetching strategies for predictable user interactions
+- Use queryClient.prefetchQuery for anticipated data needs
+
+### Infinite Queries
+- Use useInfiniteQuery for pagination or infinite scrolling scenarios
+- Structure the response data to include necessary pagination metadata

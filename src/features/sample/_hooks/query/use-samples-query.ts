@@ -1,10 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getSamplesData } from '@/features/sample/_data/get-samples';
+import { useSampleApiClientContext } from '../../_contexts/sample-api-client';
 
 export function useSamplesQuery() {
+  const sampleApiClient = useSampleApiClientContext();
+
   return useQuery({
     queryKey: ['/samples'],
-    queryFn: getSamplesData,
+    queryFn: sampleApiClient.getSamplesData,
   });
 }

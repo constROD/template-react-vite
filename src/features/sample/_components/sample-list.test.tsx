@@ -1,65 +1,59 @@
-import { renderWithQueryClient } from '@/hooks/query/__test-utils__/mock-query-client';
-import { server } from '@/vitest-setup';
-import { screen } from '@testing-library/react';
-import { http, HttpResponse } from 'msw';
+import { testMocksWrapper } from '@/utils/__test-utils__/test-mocks-wrapper';
+import { render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { mockSampleApiClient } from '../_contexts/__test-utils__/mock-sample-api-client';
+import { SampleApiClientProvider } from '../_contexts/sample-api-client';
+import { makeFakeSample } from '../_data/__test-utils__/make-fake-sample';
 import { SampleList } from './sample-list';
 
-const mockSamples = [
-  {
-    id: 1,
-    title: 'Test Title 1',
-    body: 'Test Body 1',
-    userId: 101,
-  },
-  {
-    id: 2,
-    title: 'Test Title 2',
-    body: 'Test Body 2',
-    userId: 102,
-  },
-];
+function renderTestComponent() {
+  return render(<SampleList />, {
+    wrapper: ({ children }) => (
+      <SampleApiClientProvider client={mockSampleApiClient}>
+        {testMocksWrapper({ children })}
+      </SampleApiClientProvider>
+    ),
+  });
+}
+
+const mockSamples = Array.from({ length: 3 }, makeFakeSample);
 
 describe('SampleList', () => {
   beforeEach(() => {
-    server.use(
-      http.get('*', () => {
-        return new HttpResponse(JSON.stringify(mockSamples));
-      })
-    );
+    mockSampleApiClient.getSamplesData.mockResolvedValueOnce(mockSamples);
   });
 
-  it('should render loading state initially', () => {
-    renderWithQueryClient(<SampleList />);
+  it('should render loading state initially', async () => {
+    renderTestComponent();
+
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
   it('should render the list of samples', async () => {
-    renderWithQueryClient(<SampleList />);
+    renderTestComponent();
 
     expect(screen.getByText('Loading...')).toBeInTheDocument();
 
-    await screen.findByText('ID: 1');
-
-    mockSamples.forEach(sample => {
-      expect(screen.getByText(`ID: ${sample.id}`)).toBeInTheDocument();
-      expect(screen.getByText(`TITLE: ${sample.title}`)).toBeInTheDocument();
-      expect(screen.getByText(`BODY: ${sample.body}`)).toBeInTheDocument();
-      expect(screen.getByText(`USER ID: ${sample.userId}`)).toBeInTheDocument();
+    await waitFor(() => {
+      for (const sample of mockSamples) {
+        expect(screen.getByText(`ID: ${sample.id}`)).toBeInTheDocument();
+        expect(screen.getByText(`User ID: ${sample.userId}`)).toBeInTheDocument();
+        expect(screen.getByText(sample.title)).toBeInTheDocument();
+        expect(screen.getByText(sample.body)).toBeInTheDocument();
+      }
     });
   });
 
   it('should handle error state', async () => {
-    server.use(
-      http.get('*', () => {
-        return new HttpResponse('Something went wrong', { status: 400 });
-      })
-    );
-    renderWithQueryClient(<SampleList />);
+    mockSampleApiClient.getSamplesData.mockReset();
+    mockSampleApiClient.getSamplesData.mockRejectedValueOnce(new Error('Something went wrong'));
+
+    renderTestComponent();
 
     expect(screen.getByText('Loading...')).toBeInTheDocument();
 
-    // Wait for the error message to appear
-    await screen.findByText(/Something went wrong/i);
+    await waitFor(() => {
+      expect(screen.getByText(/Something went wrong/i)).toBeInTheDocument();
+    });
   });
 });

@@ -1,6 +1,5 @@
-// import { vi } from 'vitest';
-// import { type ApiClientContext } from '../api-client';
+import { type ApiClientContextState } from '../api-client';
 
-// export const mockApiClient = {
-//   searchSample: vi.fn(),
-// } satisfies ApiClientContext;
+export const mockApiClient = {
+  // getSomethingData: vi.fn(),
+} satisfies ApiClientContextState;

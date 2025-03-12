@@ -1,6 +1,6 @@
 {
   "version": "0.2",
   "language": "en",
-  "words": ["commitlint", "degit", "pnpm", "tanstack", "Todos", "zustand"],
+  "words": ["commitlint", "degit", "Nuqs", "pnpm", "tanstack", "Todos", "zustand"],
   "ignorePaths": ["node_modules/", "dist/", ".vscode/", ".husky", "pnpm-lock.yaml", "package.json"]
 }
