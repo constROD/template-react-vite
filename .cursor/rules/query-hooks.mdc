@@ -76,6 +76,10 @@ export function useSampleQuery(args: UseSampleQueryArgs) {
 }
 ```
 
+### Before Implementing Test Guidelines
+- If the hooks uses `useApiClientContext` check if there's a `mockApiClient` and how it is implemented and also check if that existing in the `testMocksWrapper`
+- If the hook uses a different API Client Context check if there's a `mock[Entity]ApiClient` and use that in the testing instead.
+
 ### Example Query Hook Test
 ```jsx
 import { testMocksWrapper } from '@/utils/__test-utils__/test-mocks-wrapper';
