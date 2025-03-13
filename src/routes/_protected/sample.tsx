@@ -11,7 +11,7 @@ export const Route = createFileRoute('/_protected/sample')({
 function SamplePage() {
   return (
     <SampleApiClientProvider>
-      <div className="flex flex-col gap-6">
+      <div className="container mx-auto flex flex-col gap-8 py-10">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold tracking-tight">Sample</h1>
         </div>

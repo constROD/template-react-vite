@@ -13,14 +13,15 @@ import {
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import { useAuthContext } from '@/contexts/auth';
+import { useLayoutsContext } from '@/contexts/layouts';
 import { cn } from '@/lib/utils';
-import { Link, useRouter } from '@tanstack/react-router';
+import { Link, useRouterState } from '@tanstack/react-router';
 import { LogOut, User } from 'lucide-react';
 import { ThemeToggle } from './ui/theme-toggle';
 
 export function Navbar() {
-  const router = useRouter();
-  const pathname = router.state.location.pathname;
+  const routerState = useRouterState();
+  const pathname = routerState.location.pathname;
 
   return (
     <div className="border-b">
@@ -65,7 +66,10 @@ export function Navbar() {
 }
 
 function AuthenticationButton() {
+  const layoutsContext = useLayoutsContext();
   const authContext = useAuthContext();
+
+  if (layoutsContext.hideNavbar) return null;
 
   if (authContext.isAuthenticated) {
     return (

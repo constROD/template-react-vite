@@ -3,6 +3,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { ApiClientProvider } from './contexts/api-client';
 import { AuthProvider } from './contexts/auth';
+import { LayoutsProvider } from './contexts/layouts';
 import { ThemeProvider } from './contexts/theme';
 import './global.css';
 import { routeTree } from './routeTree.gen';
@@ -29,14 +30,16 @@ declare module '@tanstack/react-router' {
 export function App() {
   return (
     <ThemeProvider defaultTheme="dark">
-      <QueryClientProvider client={queryClient}>
-        <ApiClientProvider>
-          <AuthProvider>
-            <RouterProvider router={router} />
-            <ReactQueryDevtools initialIsOpen={false} />
-          </AuthProvider>
-        </ApiClientProvider>
-      </QueryClientProvider>
+      <LayoutsProvider>
+        <QueryClientProvider client={queryClient}>
+          <ApiClientProvider>
+            <AuthProvider>
+              <RouterProvider router={router} />
+              <ReactQueryDevtools initialIsOpen={false} />
+            </AuthProvider>
+          </ApiClientProvider>
+        </QueryClientProvider>
+      </LayoutsProvider>
     </ThemeProvider>
   );
 }

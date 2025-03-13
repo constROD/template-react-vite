@@ -9,7 +9,7 @@ export const Route = createFileRoute('/_public/')({
 
 function IndexPage() {
   return (
-    <div className="flex flex-col gap-8">
+    <div className="container mx-auto flex flex-col gap-8 py-10">
       <section className="flex flex-col gap-4 py-12 text-center">
         <h1 className="text-4xl font-bold tracking-tight">Welcome to Template React Vite</h1>
         <p className="mx-auto max-w-[700px] text-xl text-muted-foreground">

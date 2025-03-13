@@ -1,4 +1,6 @@
+import { Footer } from '@/components/footer';
 import { Navbar } from '@/components/navbar';
+import { cn } from '@/lib/utils';
 import { HeadContent, Outlet, createRootRoute } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import '../global.css';
@@ -35,23 +37,19 @@ export const Route = createRootRoute({
 });
 
 function RootPage() {
-  const currentYear = new Date().getFullYear();
-
   return (
     <>
       <HeadContent />
-      <div className="flex min-h-screen flex-col">
-        <Navbar />
-        <main className="container mx-auto flex-1 py-6">
-          <Outlet />
+      <div className="grid min-h-screen">
+        <main className="grid h-full grid-rows-[auto_1fr_auto]">
+          <Navbar />
+          <main className={cn('h-full w-full')}>
+            <Outlet />
+          </main>
+          <Footer />
         </main>
-        <footer className="border-t py-4">
-          <div className="container mx-auto text-center text-sm text-muted-foreground">
-            &copy; {currentYear} Template React Vite by bossROD. All rights reserved.
-          </div>
-        </footer>
-        {process.env.NODE_ENV === 'development' && <TanStackRouterDevtools />}
       </div>
+      {process.env.NODE_ENV === 'development' && <TanStackRouterDevtools />}
     </>
   );
 }
