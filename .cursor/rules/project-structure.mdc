@@ -101,3 +101,10 @@ src/features/<feature-name>/
 ├── _types/                 # Feature's types
 └── _utils/                 # Feature's utilities
 ```
+
+## UI Components with shadcn/ui
+When using shadcn/ui components:
+- All UI components should be installed in `src/components/ui/`
+- Follow the official shadcn/ui installation instructions
+- Use the CLI: `pnpm dlx shadcn@latest add <component-name>`
+- When creating custom variants, define them in `src/lib/utils.ts` with the `cn` utility
