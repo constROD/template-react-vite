@@ -15,14 +15,16 @@ Query hooks abstract data fetching operations using TanStack Query to provide op
 src/
 ├── hooks/                  # Shared hooks module
 │   └── query/              # Shared query hooks
-│       ├── use-[entity]-query.ts      # Query for single entity
-│       └── use-[entity]s-query.ts     # Query for multiple entities
+│       └── [entity]
+│           ├── use-[entity]-query.ts      # Query for single entity
+│           └── use-[entity]s-query.ts     # Query for multiple entities
 └── features/
     └── [feature-name]/
         └── _hooks/         # Feature-specific hooks
             └── query/      # Feature-specific query hooks
-                ├── use-[entity]-query.ts
-                └── use-[entity]s-query.ts
+                └── [entity]
+                    ├── use-[entity]-query.ts
+                    └── use-[entity]s-query.ts
 ```
 
 ## Naming Conventions

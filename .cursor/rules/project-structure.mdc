@@ -57,10 +57,11 @@ src/
 ├── contexts/               # Shared react context api module
 ├── data/                   # Shared data access layer module (API, database)
 ├── hooks/                  # Shared custom hooks, tanstack query and mutation
-│   ├── use-<hook-name>.ts  # Shared custom hook
-│   └── query/              # React-query hooks
-│       ├── use-<hook-name>-query.ts     # Shared react-query query (Only if necessary)
-│       └── use-<hook-name>-mutation.ts  # Shared react-query mutation (Only if necessary)
+│   ├── use-[custom].ts  # Shared custom hook
+│   └── query/              # TanStack Query hooks
+│       └── [entity]/  # TanStack Query entity folder
+│           ├── use-[entity]-query.ts     # Shared react-query query (Only if necessary)
+│           └── use-[entity]-mutation.ts  # Shared react-query mutation (Only if necessary)
 ├── lib/                    # Shared 3rd party integrations
 ├── services/               # Shared business logic (only if necessary)
 ├── stores/                 # Shared state stores (e.g., zustand)

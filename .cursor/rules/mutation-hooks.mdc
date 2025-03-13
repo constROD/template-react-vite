@@ -15,16 +15,18 @@ Mutation hooks abstract data modification operations (create, update, delete) us
 src/
 ├── hooks/                      # Shared hooks module
 │   └── query/                  # Shared query hooks (includes mutations)
-│       ├── use-create-[entity]-mutation.ts    # Create operation
-│       ├── use-update-[entity]-mutation.ts    # Update operation
-│       └── use-delete-[entity]-mutation.ts    # Delete operation
+│       └── [entity]
+│           ├── use-create-[entity]-mutation.ts    # Create operation
+│           ├── use-update-[entity]-mutation.ts    # Update operation
+│           └── use-delete-[entity]-mutation.ts    # Delete operation
 └── features/
     └── [feature-name]/
         └── _hooks/             # Feature-specific hooks
             └── query/          # Feature-specific query hooks (includes mutations)
-                ├── use-create-[entity]-mutation.ts
-                ├── use-update-[entity]-mutation.ts
-                └── use-delete-[entity]-mutation.ts
+                └── [entity]
+                    ├── use-create-[entity]-mutation.ts
+                    ├── use-update-[entity]-mutation.ts
+                    └── use-delete-[entity]-mutation.ts
 ```
 
 ## Naming Conventions
