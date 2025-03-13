@@ -102,6 +102,10 @@ src/features/<feature-name>/
 └── _utils/                 # Feature's utilities
 ```
 
+## For Testing
+- Don't forget to run the `pnpm test [path]` command to check if there's a failing tests.
+- Start investigating why there's a failing tests and start fixing it once you understand the context.
+
 ## UI Components with shadcn/ui
 When using shadcn/ui components:
 - All UI components should be installed in `src/components/ui/`
