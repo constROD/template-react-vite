@@ -1,4 +1,5 @@
 import { useAuthContext } from '@/contexts/auth';
+import { useToastClientContext } from '@/contexts/toast-client';
 import { createFileRoute, Outlet, useNavigate } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
@@ -7,7 +8,8 @@ export const Route = createFileRoute('/_protected')({
 });
 
 function PrivateLayout() {
-  const { isAuthenticated } = useAuthContext();
+  const authContext = useAuthContext();
+  const toastClient = useToastClientContext();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,7 +20,8 @@ function PrivateLayout() {
 
       const encodedRedirect = encodeURIComponent(pathname);
 
-      if (!isAuthenticated) {
+      if (!authContext.isAuthenticated) {
+        toastClient.error('You must be logged in to access this page');
         navigate({ to: `/?redirect=${encodedRedirect}` });
         return;
       }
@@ -29,9 +32,9 @@ function PrivateLayout() {
     };
 
     handleNavigation();
-  }, [isAuthenticated, navigate]);
+  }, [authContext.isAuthenticated, navigate, toastClient]);
 
-  if (!isAuthenticated) return null;
+  if (!authContext.isAuthenticated) return null;
 
   return <Outlet />;
 }

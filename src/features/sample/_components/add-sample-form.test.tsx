@@ -1,15 +1,20 @@
-import * as createSampleDataModule from '@/features/sample/_data/create-sample';
+import { testMocksWrapper } from '@/utils/__test-utils__/test-mocks-wrapper';
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { mockSampleApiClient } from '../_contexts/__test-utils__/mock-sample-api-client';
+import { SampleApiClientProvider } from '../_contexts/sample-api-client';
 import { AddSampleForm } from './add-sample-form';
 
 const renderComponentUnderTest = () => {
-  const view = render(<AddSampleForm />);
+  const view = render(<AddSampleForm />, {
+    wrapper: ({ children }) => (
+      <SampleApiClientProvider client={mockSampleApiClient}>
+        {testMocksWrapper({ children })}
+      </SampleApiClientProvider>
+    ),
+  });
 
-  const events = {
-    createSampleData: vi.spyOn(createSampleDataModule, 'createSampleData'),
-  };
   const elements = {
     submitButton: () => screen.getByRole('button', { name: 'Add Sample' }),
     emailInput: () => screen.getByLabelText('Email'),
@@ -18,7 +23,6 @@ const renderComponentUnderTest = () => {
   };
 
   return {
-    events,
     elements,
     ...view,
   };
@@ -35,7 +39,7 @@ describe('AddSampleForm', () => {
   });
 
   it('can fill up all fields with valid data and submit', async () => {
-    const { events, elements } = renderComponentUnderTest();
+    const { elements } = renderComponentUnderTest();
 
     const mockFormData = {
       email: 'test@gmail.com',
@@ -59,7 +63,7 @@ describe('AddSampleForm', () => {
 
     await userEvent.click(elements.submitButton());
 
-    expect(events.createSampleData).toHaveBeenCalledWith({
+    expect(mockSampleApiClient.createSampleData).toHaveBeenCalledWith({
       title: mockFormData.email,
       body: mockFormData.description,
       userId: 1,
@@ -67,7 +71,7 @@ describe('AddSampleForm', () => {
   });
 
   it('should not allow to submit if the form validation is not satisfied', async () => {
-    const { events, elements } = renderComponentUnderTest();
+    const { elements } = renderComponentUnderTest();
 
     const mockFormData = {
       email: 'test',
@@ -91,6 +95,6 @@ describe('AddSampleForm', () => {
 
     await userEvent.click(elements.submitButton());
 
-    expect(events.createSampleData).not.toHaveBeenCalled();
+    expect(mockSampleApiClient.createSampleData).not.toHaveBeenCalled();
   });
 });

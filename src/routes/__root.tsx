@@ -1,6 +1,7 @@
 import { Footer } from '@/components/footer';
 import { Navbar } from '@/components/navbar';
 import { cn } from '@/lib/utils';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { HeadContent, Outlet, createRootRoute } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import '../global.css';
@@ -49,7 +50,18 @@ function RootPage() {
           <Footer />
         </main>
       </div>
-      {process.env.NODE_ENV === 'development' && <TanStackRouterDevtools />}
+      <TanStackDevtools />
+    </>
+  );
+}
+
+function TanStackDevtools() {
+  if (process.env.NODE_ENV !== 'development') return null;
+
+  return (
+    <>
+      <ReactQueryDevtools initialIsOpen={false} />
+      <TanStackRouterDevtools />
     </>
   );
 }
