@@ -1,5 +1,6 @@
 import { Footer } from '@/components/footer';
 import { Navbar } from '@/components/navbar';
+import { NotFound } from '@/components/not-found';
 import { cn } from '@/lib/utils';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { HeadContent, Outlet, createRootRoute } from '@tanstack/react-router';
@@ -35,6 +36,7 @@ export const Route = createRootRoute({
       { name: 'theme-color', content: '#ffffff' },
     ],
   }),
+  notFoundComponent: NotFound,
 });
 
 function RootPage() {
