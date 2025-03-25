@@ -12,6 +12,7 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
+import { useAuthContext } from '@/contexts/auth';
 import { useLayoutsContext } from '@/contexts/layouts';
 import { cn } from '@/lib/utils';
 import { useSessionStore } from '@/stores/use-session-store';
@@ -67,11 +68,9 @@ export function Navbar() {
 
 function AuthenticationButton() {
   const layoutsContext = useLayoutsContext();
+  const authContext = useAuthContext();
+
   const user = useSessionStore(s => s.user);
-  const actions = useSessionStore(s => ({
-    login: s.login,
-    logout: s.logout,
-  }));
 
   if (layoutsContext.hideNavbar) return null;
 
@@ -89,7 +88,7 @@ function AuthenticationButton() {
         <DropdownMenuContent align="end">
           <DropdownMenuItem
             className="flex cursor-pointer items-center gap-2"
-            onClick={actions.logout}
+            onClick={authContext.logout}
           >
             <LogOut className="h-4 w-4" />
             <span>Logout</span>
@@ -101,7 +100,7 @@ function AuthenticationButton() {
 
   return (
     <button
-      onClick={() => actions.login('test@test.com', 'password')}
+      onClick={() => authContext.login('test@test.com', 'password')}
       className="flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
     >
       <User className="h-4 w-4" />

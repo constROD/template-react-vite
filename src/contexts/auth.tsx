@@ -1,17 +1,48 @@
 import { useSessionStore } from '@/stores/use-session-store';
+import { type AuthenticatedUser } from '@/types/auth';
 import { createContext, useContext, useEffect, type ReactNode } from 'react';
 
-const AuthContext = createContext(null);
+export type AuthContextState = {
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+};
+
+const AuthContext = createContext<AuthContextState | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const verifySession = useSessionStore(s => s.verifySession);
+  const actions = useSessionStore(s => ({
+    reset: s.reset,
+    setUser: s.setUser,
+  }));
+
+  const login = async (email: string, password: string) => {
+    // TODO: Implement http login logic
+    // eslint-disable-next-line no-console
+    console.log(email, password);
+    const user = {
+      id: '1',
+      email,
+      name: 'Test User',
+      role: 'Admin',
+    } satisfies AuthenticatedUser;
+    actions.setUser(user);
+  };
+
+  const logout = async () => {
+    // TODO: Implement http logout logic
+    actions.reset();
+  };
 
   useEffect(() => {
-    // TODO: Implement verify session logic
+    const verifySession = async () => {
+      // TODO: Implement http verify session logic
+    };
     verifySession();
-  }, [verifySession]);
+  }, []);
 
-  return <AuthContext.Provider value={null}>{children}</AuthContext.Provider>;
+  const contextValue: AuthContextState = { logout, login };
+
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 }
 
 export function useAuthContext() {
