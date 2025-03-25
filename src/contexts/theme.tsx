@@ -5,6 +5,7 @@ const ThemeProviderContext = createContext(null);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const theme = useThemeStore(s => s.theme);
+  const setTheme = useThemeStore(s => s.setTheme);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -16,11 +17,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         : 'light';
 
       root.classList.add(systemTheme);
+      setTheme(systemTheme);
       return;
     }
 
     root.classList.add(theme);
-  }, [theme]);
+    setTheme(theme);
+  }, [theme, setTheme]);
 
   return <ThemeProviderContext.Provider value={null}>{children}</ThemeProviderContext.Provider>;
 }
