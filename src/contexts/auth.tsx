@@ -1,4 +1,4 @@
-import { useSessionStore } from '@/hooks/use-session-store';
+import { useSessionStore } from '@/stores/use-session-store';
 import { createContext, useContext, useEffect, type ReactNode } from 'react';
 
 const AuthContext = createContext(null);

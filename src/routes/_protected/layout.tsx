@@ -1,5 +1,5 @@
 import { useToastClientContext } from '@/contexts/toast-client';
-import { useSessionStore } from '@/hooks/use-session-store';
+import { useSessionStore } from '@/stores/use-session-store';
 import { createFileRoute, Outlet, useNavigate } from '@tanstack/react-router';
 import { useEffect } from 'react';
 

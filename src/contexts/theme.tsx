@@ -1,4 +1,4 @@
-import { useThemeStore } from '@/hooks/use-theme-store';
+import { useThemeStore } from '@/stores/use-theme-store';
 import { createContext, type ReactNode, useContext, useEffect } from 'react';
 
 const ThemeProviderContext = createContext(null);

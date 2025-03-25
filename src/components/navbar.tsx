@@ -13,8 +13,8 @@ import {
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import { useLayoutsContext } from '@/contexts/layouts';
-import { useSessionStore } from '@/hooks/use-session-store';
 import { cn } from '@/lib/utils';
+import { useSessionStore } from '@/stores/use-session-store';
 import { Link, useRouterState } from '@tanstack/react-router';
 import { LogOut, User } from 'lucide-react';
 import { ThemeToggle } from './ui/theme-toggle';
