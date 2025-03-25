@@ -30,7 +30,7 @@ declare module '@tanstack/react-router' {
 
 export function App() {
   return (
-    <ThemeProvider defaultTheme="dark">
+    <ThemeProvider>
       <ToastClientProvider>
         <LayoutsProvider>
           <QueryClientProvider client={queryClient}>

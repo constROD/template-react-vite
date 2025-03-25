@@ -1,4 +1,4 @@
-import { useAuthContext } from '@/contexts/auth';
+import { useSessionStore } from '@/hooks/use-session-store';
 import { createFileRoute, Outlet, useNavigate } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
@@ -7,8 +7,8 @@ export const Route = createFileRoute('/_public')({
 });
 
 function PublicLayout() {
-  const { isAuthenticated } = useAuthContext();
   const navigate = useNavigate();
+  const isAuthenticated = useSessionStore(s => !!s.user);
 
   useEffect(() => {
     const handleNavigation = () => {

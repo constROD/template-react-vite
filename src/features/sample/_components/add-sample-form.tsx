@@ -36,7 +36,7 @@ export const AddSampleForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
       <Input label="Email" error={formState.errors.email?.message} {...register('email')} />
       <Input label="Name" error={formState.errors.name?.message} {...register('name')} />
       <Input

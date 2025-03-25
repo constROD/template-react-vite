@@ -12,8 +12,8 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
-import { useAuthContext } from '@/contexts/auth';
 import { useLayoutsContext } from '@/contexts/layouts';
+import { useSessionStore } from '@/hooks/use-session-store';
 import { cn } from '@/lib/utils';
 import { Link, useRouterState } from '@tanstack/react-router';
 import { LogOut, User } from 'lucide-react';
@@ -67,25 +67,29 @@ export function Navbar() {
 
 function AuthenticationButton() {
   const layoutsContext = useLayoutsContext();
-  const authContext = useAuthContext();
+  const user = useSessionStore(s => s.user);
+  const actions = useSessionStore(s => ({
+    login: s.login,
+    logout: s.logout,
+  }));
 
   if (layoutsContext.hideNavbar) return null;
 
-  if (authContext.isAuthenticated) {
+  if (user) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger className="focus:outline-none">
           <Avatar className="h-8 w-8 cursor-pointer transition-opacity hover:opacity-80">
             <AvatarImage src="" alt="User avatar" />
             <AvatarFallback className="bg-primary text-primary-foreground">
-              {getUserInitials(authContext.user?.name || authContext.user?.email)}
+              {getUserInitials(user.name || user.email)}
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem
             className="flex cursor-pointer items-center gap-2"
-            onClick={authContext.logout}
+            onClick={actions.logout}
           >
             <LogOut className="h-4 w-4" />
             <span>Logout</span>
@@ -97,7 +101,7 @@ function AuthenticationButton() {
 
   return (
     <button
-      onClick={() => authContext.login('test@test.com', 'password')}
+      onClick={() => actions.login('test@test.com', 'password')}
       className="flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
     >
       <User className="h-4 w-4" />
