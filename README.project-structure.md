@@ -50,16 +50,16 @@ src/
 │   └── ui/                 # UI components (button, input, etc.)
 ├── constants/              # Shared constants module
 ├── contexts/               # Shared react context api module
-├── data/                   # Shared data access layer module (API, database)
+├── data/                   # Shared data access layer module (e.g. API functions, database)
 ├── hooks/                  # Shared custom hooks, tanstack query and mutation
 │   ├── use-[custom].ts  # Shared custom hook
 │   └── query/              # TanStack Query hooks
 │       └── [entity]/  # TanStack Query entity folder
-│           ├── use-[entity]-query.ts     # Shared react-query query (Only if necessary)
-│           └── use-[entity]-mutation.ts  # Shared react-query mutation (Only if necessary)
+│           ├── use-[entity]-query.ts     # Shared react-query query
+│           └── use-[entity]-mutation.ts  # Shared react-query mutation
 ├── lib/                    # Shared 3rd party integrations
-├── services/               # Shared business logic (only if necessary)
-├── stores/                 # Shared state stores (e.g., zustand)
+├── services/               # Shared business logic
+├── stores/                 # Shared state stores (e.g. zustand)
 ├── types/                  # Shared types
 └── utils/                  # Shared utilities
 ```
@@ -69,7 +69,7 @@ When creating new page/route files, follow this structure:
 
 ```
 src/routes/<route-name>/
-├── index.tsx               # Route's entry point
+├── index.tsx               # Route's index page
 ├── -components/            # Route's components
 ├── -constants/             # Route's constants
 ├── -contexts/              # Route's react context API
@@ -83,16 +83,15 @@ When creating new feature files, follow this structure:
 
 ```
 src/features/<feature-name>/
-├── index.ts                # Feature's entry point
-├── _assets/                # Feature's assets (only if necessary)
+├── _assets/                # Feature's assets
 ├── _components/            # Feature's components
 ├── _constants/             # Feature's constants
 ├── _contexts/              # Feature's react context API
-├── _data/                  # Feature's data access layer (only if necessary)
-├── _hooks/                 # Feature's hooks, tanstack query and mutation (only if necessary)
-├── _lib/                   # Feature's 3rd party integrations (only if necessary)
-├── _services/              # Feature's business logic (only if necessary)
-├── _stores/                # Feature's state stores (e.g., zustand)
+├── _data/                  # Feature's data access layer
+├── _hooks/                 # Feature's custom hooks, tanstack query and mutation
+├── _lib/                   # Feature's 3rd party integrations
+├── _services/              # Feature's business logic
+├── _stores/                # Feature's state stores (e.g. zustand)
 ├── _types/                 # Feature's types
 └── _utils/                 # Feature's utilities
 ```
