@@ -1,5 +1,5 @@
 // query-client-wrapper.tsx
-import { type PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 
 import { mockApiClient } from '@/contexts/__test-utils__/mock-api-client';
 import { mockNuqsClient } from '@/contexts/__test-utils__/mock-nuqs-client';

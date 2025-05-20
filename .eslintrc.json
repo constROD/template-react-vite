@@ -27,17 +27,10 @@
     /* TypeScript */
     "@typescript-eslint/consistent-type-imports": [
       "warn",
-      {
-        "prefer": "type-imports",
-        "fixStyle": "inline-type-imports"
-      }
+      { "prefer": "type-imports", "fixStyle": "inline-type-imports" }
     ],
-    "@typescript-eslint/no-explicit-any": [
-      "error",
-      {
-        "fixToUnknown": true
-      }
-    ],
+    "@typescript-eslint/no-import-type-side-effects": "warn",
+    "@typescript-eslint/no-explicit-any": ["error", { "fixToUnknown": true }],
 
     /* Others */
     "no-console": "error"

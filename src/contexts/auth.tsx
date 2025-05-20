@@ -1,5 +1,5 @@
 import { useSessionStore } from '@/stores/use-session-store';
-import { type AuthenticatedUser } from '@/types/auth';
+import type { AuthenticatedUser } from '@/types/auth';
 import { createContext, useContext, useEffect, type ReactNode } from 'react';
 
 export type AuthContextState = {

@@ -1,9 +1,6 @@
 import { type MutationOptions, useMutation, useQueryClient } from '@tanstack/react-query';
 
-import {
-  type DeleteSampleDataArgs,
-  type deleteSampleData,
-} from '@/features/sample/_data/delete-sample';
+import type { DeleteSampleDataArgs, deleteSampleData } from '@/features/sample/_data/delete-sample';
 import { useSampleApiClientContext } from '../../_contexts/sample-api-client';
 
 export type UseDeleteSampleMutationArgs = MutationOptions<

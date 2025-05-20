@@ -1,9 +1,6 @@
 import { type MutationOptions, useMutation, useQueryClient } from '@tanstack/react-query';
 
-import {
-  type UpdateSampleDataArgs,
-  type updateSampleData,
-} from '@/features/sample/_data/update-sample';
+import type { UpdateSampleDataArgs, updateSampleData } from '@/features/sample/_data/update-sample';
 import { useSampleApiClientContext } from '../../_contexts/sample-api-client';
 
 export type UseUpdateSampleMutationArgs = MutationOptions<

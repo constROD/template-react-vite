@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { type Sample } from '../../_types/sample';
+import type { Sample } from '../../_types/sample';
 
 export function makeFakeSample(overrides?: Partial<Sample>) {
   return {

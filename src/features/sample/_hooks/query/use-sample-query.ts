@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { type GetSampleDataArgs } from '@/features/sample/_data/get-sample';
+import type { GetSampleDataArgs } from '@/features/sample/_data/get-sample';
 import { useSampleApiClientContext } from '../../_contexts/sample-api-client';
 export type UseSampleQueryArgs = GetSampleDataArgs & {
   enabled?: boolean;

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-import { type AuthenticatedUser } from '@/types/auth';
+import type { AuthenticatedUser } from '@/types/auth';
 
 export type SessionStoreState = {
   user: AuthenticatedUser | null;

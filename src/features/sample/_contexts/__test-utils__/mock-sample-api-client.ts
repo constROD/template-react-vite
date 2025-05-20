@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { type SampleApiClientContext } from '../sample-api-client';
+import type { SampleApiClientContext } from '../sample-api-client';
 
 export const mockSampleApiClient = {
   getSamplesData: vi.fn(),
