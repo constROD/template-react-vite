@@ -22,6 +22,12 @@
 - `snake_case` - for database tables and columns
 - `camelCase` - for functions, zod schemas and etc.
 
+## Miscellaneous Folders
+- `docs` - for any to-do plan workflows or documentation
+- `prompts` - for prompts format
+- `rules` - for standards or rules of the repo
+- `.husky` - for husky configuration
+
 ## Common Modules
 - `assets` - for assets
 - `components` - for components
