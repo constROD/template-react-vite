@@ -1,7 +1,7 @@
 ---
 description: # Guidelines for Styling
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 # Guidelines for Styling
 

@@ -1,6 +1,6 @@
 ---
 description: Guidelines for Mutation Hooks
-globs: 
+globs: **/hooks/query/**/*.ts, **/_hooks/query/**/*.ts
 alwaysApply: false
 ---
 # Guidelines for Mutation Hooks

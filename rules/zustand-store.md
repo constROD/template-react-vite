@@ -1,6 +1,6 @@
 ---
 description: # Guidelines for Zustand Store
-globs: 
+globs: **/stores/**/*.ts, **/_stores/**/*.ts
 alwaysApply: false
 ---
 # Guidelines for Zustand Stores

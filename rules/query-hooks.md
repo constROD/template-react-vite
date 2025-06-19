@@ -1,6 +1,6 @@
 ---
 description: Guidelines for Query Hooks
-globs: 
+globs: **/hooks/query/**/*.ts, **/_hooks/query/**/*.ts
 alwaysApply: false
 ---
 # Guidelines for Query Hooks
