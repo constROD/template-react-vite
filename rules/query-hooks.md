@@ -59,13 +59,12 @@ src/
 
 ### Query Key Structure
 - Use descriptive and hierarchical query keys
-- Follow REST-like patterns: `['GET /[entity]', ...params]`
+- Follow REST-like patterns: `['/[entity]', ...params]`
 - Include relevant parameters in query keys for proper cache invalidation
 - Examples:
-  - Single entity: `['GET /[entity]', entityId]`
-  - Multiple entities: `['GET /[entity]s']`
-  - Search: `['GET /[entity]s', '/search', searchParams]`
-  - Active: `['GET /[entity]s', 'active']`
+  - Single entity: `['/[entity]', entityId]`
+  - Multiple entities: `['/[entity]s']`
+  - Search: `['/[entity]s', '/search', searchParams]`
 
 ## CRUD Query Examples
 
@@ -79,7 +78,7 @@ export type Use[Entity]QueryArgs = Get[Entity]sBy[Entity]IdData;
 
 export function use[Entity]Query(args: Use[Entity]QueryArgs) {
   return useQuery({
-    queryKey: ['GET /[entity]s', args.[entity]Id],
+    queryKey: ['/[entity]s', args.[entity]Id],
     queryFn: () => get[Entity]sBy[Entity]Id(args),
   });
 }
@@ -95,16 +94,13 @@ export type UseSearch[Entity]sQueryArgs = Omit<
   UseQueryOptions<Search[Entity]sResponse, ApiError>,
   'queryKey' | 'queryFn'
 > & {
-  searchPayload: Search[Entity]sData;
+  payload: Search[Entity]sData;
 };
 
-export function useSearch[Entity]sQuery({
-  searchPayload,
-  ...args
-}: UseSearch[Entity]sQueryArgs) {
+export function useSearch[Entity]sQuery({ payload,  ...args }: UseSearch[Entity]sQueryArgs) {
   return useQuery({
-    queryKey: ['GET /[entity]s', '/search', searchPayload],
-    queryFn: () => search[Entity]s(searchPayload),
+    queryKey: ['/[entity]s', '/search', payload],
+    queryFn: () => search[Entity]s(payload),
     ...args,
   });
 }
@@ -120,7 +116,7 @@ export type UseSearch[Entity]sInfiniteQueryArgs = Search[Entity]sData;
 
 export function useSearch[Entity]sInfiniteQuery(args?: UseSearch[Entity]sInfiniteQueryArgs) {
   return useInfiniteQuery({
-    queryKey: ['GET /[entity]s', '/search', args],
+    queryKey: ['/[entity]s', '/search', args],
     queryFn: ({ pageParam }) => search[Entity]s({ ...args, page: pageParam }),
     initialPageParam: 1,
     getNextPageParam: lastPage => lastPage.next_page,

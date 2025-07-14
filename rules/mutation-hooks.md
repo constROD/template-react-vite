@@ -84,7 +84,7 @@ export function useCreate[Entity]Mutation(args: UseCreate[Entity]MutationArgs = 
     ...args,
     mutationFn: post[Entity]s,
     onSuccess: async (data, variables, context) => {
-      await queryClient.invalidateQueries({ queryKey: ['GET /[entity]s'] });
+      await queryClient.invalidateQueries({ queryKey: ['/[entity]s'] });
       args.onSuccess?.(data, variables, context);
     },
     onError: (error, variables, context) => {
@@ -119,7 +119,7 @@ export function useUpdate[Entity]Mutation(args: UseUpdate[Entity]MutationArgs = 
     ...args,
     mutationFn: put[Entity]sBy[Entity]Id,
     onSuccess: async (data, variables, context) => {
-      await queryClient.invalidateQueries({ queryKey: ['GET /[entity]s'] });
+      await queryClient.invalidateQueries({ queryKey: ['/[entity]s'] });
       args.onSuccess?.(data, variables, context);
     },
     onError: (error, variables, context) => {
@@ -154,7 +154,7 @@ export function useDelete[Entity]Mutation(args: UseDelete[Entity]MutationArgs = 
     ...args,
     mutationFn: delete[Entity]sBy[Entity]Id,
     onSuccess: async (data, variables, context) => {
-      await queryClient.invalidateQueries({ queryKey: ['GET /[entity]s'] });
+      await queryClient.invalidateQueries({ queryKey: ['/[entity]s'] });
       args.onSuccess?.(data, variables, context);
     },
     onError: (error, variables, context) => {
