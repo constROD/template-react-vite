@@ -1,6 +1,6 @@
 ---
 description: Guidelines for Query Hooks
-globs: 
+globs: **/hooks/query/**/*.ts, **/_hooks/query/**/*.ts
 alwaysApply: false
 ---
 # Guidelines for Query Hooks
@@ -15,119 +15,126 @@ Query hooks abstract data fetching operations using TanStack Query to provide op
 src/
 ├── hooks/                  # Shared hooks module
 │   └── query/              # Shared query hooks
-│       └── [entity]
-│           ├── use-[entity]-query.ts      # Query for single entity
-│           └── use-[entity]s-query.ts     # Query for multiple entities
+│       └── [entity]/
+│           ├── use-[entity]-query.ts                    # Read single entity
+│           ├── use-search-[entity]s-query.ts            # Search with regular pagination
+│           └── use-search-[entity]s-infinite-query.ts   # Search with infinite scroll
 └── features/
     └── [feature-name]/
         └── _hooks/         # Feature-specific hooks
             └── query/      # Feature-specific query hooks
-                └── [entity]
+                └── [entity]/
                     ├── use-[entity]-query.ts
-                    └── use-[entity]s-query.ts
+                    ├── use-search-[entity]s-query.ts
+                    └── use-search-[entity]s-infinite-query.ts
 ```
 
 ## Naming Conventions
 
 ### Files
-- `use-[entity]-query.ts`: For querying a single entity
-- `use-[entity]s-query.ts`: For querying multiple entities
+- `use-[entity]-query.ts`: For querying a single entity by ID
+- `use-search-[entity]s-query.ts`: For searching entities with regular pagination
+- `use-search-[entity]s-infinite-query.ts`: For searching entities with infinite scroll
 
 ### Functions
 - `use[Entity]Query`: For querying a single entity
-- `use[Entity]sQuery`: For querying multiple entities
+- `useSearch[Entity]sQuery`: For searching entities with regular pagination
+- `useSearch[Entity]sInfiniteQuery`: For searching entities with infinite scroll
 
 ### Types
 - `Use[Entity]QueryArgs`: Arguments for single entity query
-- `Use[Entity]sQueryArgs`: Arguments for multiple entities query (if needed)
+- `UseSearch[Entity]sQueryArgs`: Arguments for regular search query
+- `UseSearch[Entity]sInfiniteQueryArgs`: Arguments for infinite search query
 
 ## Implementation Guidelines
 
 ### Query Hooks
-- Use TanStack Query's `useQuery` hook
-- Connect to the data access layer through context or direct import
+- Use TanStack Query's `useQuery` hook for regular queries
+- Use `useInfiniteQuery` for paginated/infinite scroll queries
+- Import data fetching functions directly from `@/data`
 - Define appropriate query keys for proper caching
 - Structure the hook to handle loading, success, and error states
-- Document the return type of the hook
-- Consider implementing enabled/disabled logic when appropriate
+- Use TypeScript's `UseQueryOptions` or `Omit<UseQueryOptions, 'queryKey' | 'queryFn'>` for args type
+- Spread additional args to allow overriding default options
 
 ### Query Key Structure
 - Use descriptive and hierarchical query keys
+- Follow REST-like patterns: `['GET /[entity]', ...params]`
 - Include relevant parameters in query keys for proper cache invalidation
-- Follow the pattern: `[endpoint, ...params]`
+- Examples:
+  - Single entity: `['GET /[entity]', entityId]`
+  - Multiple entities: `['GET /[entity]s']`
+  - Search: `['GET /[entity]s', '/search', searchParams]`
+  - Active: `['GET /[entity]s', 'active']`
 
-### Example Query Hook
-```jsx
+## CRUD Query Examples
+
+### 1. Single Entity Query (Read)
+```typescript
+// use-[entity]-query.ts
 import { useQuery } from '@tanstack/react-query';
-import { type GetSampleDataArgs } from '@/data/get-sample';
-import { useApiClientContext } from '@/contexts/api-client';
-export type UseSampleQueryArgs = GetSampleDataArgs & {
-  enabled?: boolean;
-};
+import { get[Entity]sBy[Entity]Id, type Get[Entity]sBy[Entity]IdData } from '@/data';
 
-export function useSampleQuery(args: UseSampleQueryArgs) {
-  const apiClient = useApiClientContext();
+export type Use[Entity]QueryArgs = Get[Entity]sBy[Entity]IdData;
 
+export function use[Entity]Query(args: Use[Entity]QueryArgs) {
   return useQuery({
-    queryKey: ['/samples', args.id],
-    queryFn: () => apiClient.getSampleData({ id: args.id }),
-    enabled: args.enabled ?? !!args.id,
+    queryKey: ['GET /[entity]s', args.[entity]Id],
+    queryFn: () => get[Entity]sBy[Entity]Id(args),
   });
 }
 ```
 
-### Before Implementing Test Guidelines
-- If the hooks uses `useApiClientContext` check if there's a `mockApiClient` and how it is implemented and also check if that existing in the `testMocksWrapper`
-- If the hook uses a different API Client Context check if there's a `mock[Entity]ApiClient` and use that in the testing instead.
+### 2. Search Query with Regular Pagination (Read Multiple)
+```typescript
+// use-search-[entity]s-query.ts
+import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
+import { type ApiError, search[Entity]s, type Search[Entity]sData, type Search[Entity]sResponse } from '@/data';
 
-### Example Query Hook Test
-```jsx
-import { testMocksWrapper } from '@/utils/__test-utils__/test-mocks-wrapper';
-import { renderHook, waitFor } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
-import { mockApiClient } from '@/contexts/__test-utils__/mock-sample-api-client';
-import { makeFakeSample } from '@/data/__test-utils__/make-fake-sample';
-import { useSampleQuery, type UseSampleQueryArgs } from './use-sample-query';
+export type UseSearch[Entity]sQueryArgs = Omit<
+  UseQueryOptions<Search[Entity]sResponse, ApiError>,
+  'queryKey' | 'queryFn'
+> & {
+  searchPayload: Search[Entity]sData;
+};
 
-const mockSample = makeFakeSample();
-
-function renderTestHook(args: UseSampleQueryArgs) {
-  return renderHook(() => useSampleQuery(args), {
-    wrapper: testMocksWrapper,
+export function useSearch[Entity]sQuery({
+  searchPayload,
+  ...args
+}: UseSearch[Entity]sQueryArgs) {
+  return useQuery({
+    queryKey: ['GET /[entity]s', '/search', searchPayload],
+    queryFn: () => search[Entity]s(searchPayload),
+    ...args,
   });
 }
+```
 
-describe('useSampleQuery', () => {
-  it('should fetch sample data', async () => {
-    mockApiClient.getSampleData.mockResolvedValueOnce(mockSample);
+### 3. Search Query with Infinite Scroll (Read Multiple)
+```typescript
+// use-search-[entity]s-infinite-query.ts
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { search[Entity]s, type Search[Entity]sData } from '@/data';
 
-    const { result } = renderTestHook({ id: mockSample.id });
+export type UseSearch[Entity]sInfiniteQueryArgs = Search[Entity]sData;
 
-    expect(result.current.isLoading).toBe(true);
-
-    await waitFor(() => {
-      expect(result.current.isSuccess).toBe(true);
-    });
-
-    expect(mockApiClient.getSampleData).toHaveBeenCalledWith({ id: mockSample.id });
-    expect(mockApiClient.getSampleData).toHaveBeenCalledTimes(1);
-
-    expect(result.current.data).toEqual(mockSample);
+export function useSearch[Entity]sInfiniteQuery(args?: UseSearch[Entity]sInfiniteQueryArgs) {
+  return useInfiniteQuery({
+    queryKey: ['GET /[entity]s', '/search', args],
+    queryFn: ({ pageParam }) => search[Entity]s({ ...args, page: pageParam }),
+    initialPageParam: 1,
+    getNextPageParam: lastPage => lastPage.next_page,
+    getPreviousPageParam: firstPage => firstPage.previous_page,
   });
+}
+```
 
-  it('should handle error state', async () => {
-    const error = new Error('Failed to fetch codes');
-    mockApiClient.getSampleData.mockRejectedValueOnce(error);
-
-    const { result } = renderTestHook({ id: mockSample.id });
-
-    await waitFor(() => {
-      expect(result.current.isError).toBe(true);
-    });
-
-    expect(result.current.error).toBeDefined();
-  });
-});
+### Complete CRUD Query Folder Structure Example
+```
+src/hooks/query/[entity]/
+├── use-[entity]-query.ts                    # Read single entity
+├── use-search-[entity]s-query.ts            # Search with regular pagination
+└── use-search-[entity]s-infinite-query.ts   # Search with infinite scroll
 ```
 
 ## Best Practices

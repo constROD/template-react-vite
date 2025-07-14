@@ -15,15 +15,16 @@ Mutation hooks abstract data modification operations (create, update, delete) us
 src/
 ├── hooks/                      # Shared hooks module
 │   └── query/                  # Shared query hooks (includes mutations)
-│       └── [entity]
-│           ├── use-create-[entity]-mutation.ts    # Create operation
-│           ├── use-update-[entity]-mutation.ts    # Update operation
-│           └── use-delete-[entity]-mutation.ts    # Delete operation
+│       └── [entity]/
+│           ├── use-create-[entity]-mutation.ts        # Create operation
+│           ├── use-update-[entity]-mutation.ts        # Update operation
+│           ├── use-delete-[entity]-mutation.ts        # Delete operation
+│           └── use-[specific-action]-[entity]-mutation.ts  # Other specific mutations
 └── features/
     └── [feature-name]/
         └── _hooks/             # Feature-specific hooks
             └── query/          # Feature-specific query hooks (includes mutations)
-                └── [entity]
+                └── [entity]/
                     ├── use-create-[entity]-mutation.ts
                     ├── use-update-[entity]-mutation.ts
                     └── use-delete-[entity]-mutation.ts
@@ -35,155 +36,141 @@ src/
 - `use-create-[entity]-mutation.ts`: For create operations
 - `use-update-[entity]-mutation.ts`: For update operations
 - `use-delete-[entity]-mutation.ts`: For delete operations
+- `use-[specific-action]-[entity]-mutation.ts`: For other specific actions (e.g., `use-set-active-[entity]-mutation.ts`)
 
 ### Functions
 - `useCreate[Entity]Mutation`: For create operations
 - `useUpdate[Entity]Mutation`: For update operations
 - `useDelete[Entity]Mutation`: For delete operations
+- `use[SpecificAction][Entity]Mutation`: For other specific actions
 
 ### Types
 - `UseCreate[Entity]MutationArgs`: Arguments for create mutation hook
 - `UseUpdate[Entity]MutationArgs`: Arguments for update mutation hook
 - `UseDelete[Entity]MutationArgs`: Arguments for delete mutation hook
+- `Use[SpecificAction][Entity]MutationArgs`: Arguments for specific action mutation hook
 
 ## Implementation Guidelines
 
 ### Mutation Hooks
 - Use TanStack Query's `useMutation` hook
-- Connect to the data access layer through context or direct import
-- Accept optional configuration for callbacks (onSuccess, onError, etc.)
-- Forward configuration options to the underlying useMutation hook
-- Document the expected input and output types
+- Import mutation functions directly from `@/data`
+- Use TypeScript's `MutationOptions` type for args
+- Spread args at the beginning to allow overriding any option
+- Always get `queryClient` using `useQueryClient()`
+- Handle cache invalidation in `onSuccess`
+- Handle errors in `onError` with optional error alerting utility
+- Call the provided callback after internal logic
 
-### Example Mutation Hook
-```jsx
+## CRUD Mutation Examples
+
+### 1. Create Mutation
+```typescript
+// use-create-[entity]-mutation.ts
 import { type MutationOptions, useMutation, useQueryClient } from '@tanstack/react-query';
+import { post[Entity]s, type Post[Entity]sData, type Post[Entity]sResponse } from '@/data';
+import { alertApiError } from '@/utils/api-errors';
 
-import {
-  type CreateSampleDataArgs,
-  type createSampleData,
-} from '@/data/create-sample';
-import { useApiClientContext } from '@/contexts/api-client';
-
-export type UseCreateSampleMutationArgs = MutationOptions<
-  Awaited<ReturnType<typeof createSampleData>>,
+export type UseCreate[Entity]MutationArgs = MutationOptions<
+  Post[Entity]sResponse,
   Error,
-  CreateSampleDataArgs
+  Post[Entity]sData
 >;
 
-export function useCreateSampleMutation(args: UseCreateSampleMutationArgs = {}) {
-  const apiClient = useApiClientContext();
+export function useCreate[Entity]Mutation(args: UseCreate[Entity]MutationArgs = {}) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: apiClient.createSampleData,
-    onSuccess: async (data, params, context) => {
-      queryClient.invalidateQueries({ queryKey: ['/samples', params.id] });
-      if (args?.onSuccess) return args.onSuccess(data, params, context);
+    ...args,
+    mutationFn: post[Entity]s,
+    onSuccess: async (data, variables, context) => {
+      await queryClient.invalidateQueries({ queryKey: ['GET /[entity]s'] });
+      args.onSuccess?.(data, variables, context);
     },
     onError: (error, variables, context) => {
       if (args?.onError) return args.onError(error, variables, context);
+      alertApiError(error);
     },
   });
 }
 ```
 
-### Before Implementing Test Guidelines
-- If the hooks uses `useApiClientContext` check if there's a `mockApiClient` and how it is implemented and also check if that existing in the `testMocksWrapper`
-- If the hook uses a different API Client Context check if there's a `mock[Entity]ApiClient` and use that in the testing instead.
-
-### Example Mutation Hook Test
-```jsx
-import { testMocksWrapper } from '@/utils/__test-utils__/test-mocks-wrapper';
-import { renderHook, waitFor } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
-import { mockApiClient } from '@/contexts/__test-utils__/mock-sample-api-client';
-import { makeFakeSample } from '@/data/__test-utils__/make-fake-sample';
+### 2. Update Mutation
+```typescript
+// use-update-[entity]-mutation.ts
+import { type MutationOptions, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
-  useCreateSampleMutation,
-  type UseCreateSampleMutationArgs,
-} from './use-create-sample-mutation';
+  put[Entity]sBy[Entity]Id,
+  type Put[Entity]sBy[Entity]IdData,
+  type Put[Entity]sBy[Entity]IdResponse,
+} from '@/data';
+import { alertApiError } from '@/utils/api-errors';
 
-const mockSample = makeFakeSample();
-const mockCreateSampleData = {
-  title: mockSample.title,
-  body: mockSample.body,
-  userId: mockSample.userId,
-};
+export type UseUpdate[Entity]MutationArgs = MutationOptions<
+  Put[Entity]sBy[Entity]IdResponse,
+  Error,
+  Put[Entity]sBy[Entity]IdData
+>;
 
-function renderTestHook(args: UseCreateSampleMutationArgs = {}) {
-  return renderHook(() => useCreateSampleMutation(args), {
-    wrapper: testMocksWrapper,
+export function useUpdate[Entity]Mutation(args: UseUpdate[Entity]MutationArgs = {}) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    ...args,
+    mutationFn: put[Entity]sBy[Entity]Id,
+    onSuccess: async (data, variables, context) => {
+      await queryClient.invalidateQueries({ queryKey: ['GET /[entity]s'] });
+      args.onSuccess?.(data, variables, context);
+    },
+    onError: (error, variables, context) => {
+      if (args?.onError) return args.onError(error, variables, context);
+      alertApiError(error);
+    },
   });
 }
+```
 
-describe('useCreateSampleMutation', () => {
-  it('should create sample data', async () => {
-    mockApiClient.createSampleData.mockResolvedValueOnce(mockSample);
+### 3. Delete Mutation
+```typescript
+// use-delete-[entity]-mutation.ts
+import { type MutationOptions, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  delete[Entity]sBy[Entity]Id,
+  type Delete[Entity]sBy[Entity]IdData,
+  type Delete[Entity]sBy[Entity]IdResponse,
+} from '@/data';
+import { alertApiError } from '@/utils/api-errors';
 
-    const { result } = renderTestHook();
+export type UseDelete[Entity]MutationArgs = MutationOptions<
+  Delete[Entity]sBy[Entity]IdResponse,
+  Error,
+  Delete[Entity]sBy[Entity]IdData
+>;
 
-    result.current.mutate(mockCreateSampleData);
+export function useDelete[Entity]Mutation(args: UseDelete[Entity]MutationArgs = {}) {
+  const queryClient = useQueryClient();
 
-    await waitFor(() => {
-      expect(result.current.isSuccess).toBe(true);
-    });
-
-    expect(mockApiClient.createSampleData).toHaveBeenCalledWith(mockCreateSampleData);
-    expect(mockApiClient.createSampleData).toHaveBeenCalledTimes(1);
-    expect(result.current.data).toEqual(mockSample);
+  return useMutation({
+    ...args,
+    mutationFn: delete[Entity]sBy[Entity]Id,
+    onSuccess: async (data, variables, context) => {
+      await queryClient.invalidateQueries({ queryKey: ['GET /[entity]s'] });
+      args.onSuccess?.(data, variables, context);
+    },
+    onError: (error, variables, context) => {
+      if (args?.onError) return args.onError(error, variables, context);
+      alertApiError(error);
+    },
   });
+}
+```
 
-  it('should handle error state', async () => {
-    const error = new Error('Failed to create sample');
-    mockApiClient.createSampleData.mockRejectedValueOnce(error);
-
-    const { result } = renderTestHook();
-
-    result.current.mutate(mockCreateSampleData);
-
-    await waitFor(() => {
-      expect(result.current.isError).toBe(true);
-    });
-
-    expect(result.current.error).toBeDefined();
-  });
-
-  it('should call onSuccess callback when provided', async () => {
-    mockApiClient.createSampleData.mockResolvedValueOnce(mockSample);
-
-    const onSuccessMock = vi.fn();
-    const { result } = renderTestHook({
-      onSuccess: onSuccessMock,
-    });
-
-    result.current.mutate(mockCreateSampleData);
-
-    await waitFor(() => {
-      expect(result.current.isSuccess).toBe(true);
-    });
-
-    expect(onSuccessMock).toHaveBeenCalledWith(mockSample, mockCreateSampleData, undefined);
-  });
-
-  it('should call onError callback when provided', async () => {
-    const error = new Error('Failed to create sample');
-    mockApiClient.createSampleData.mockRejectedValueOnce(error);
-
-    const onErrorMock = vi.fn();
-    const { result } = renderTestHook({
-      onError: onErrorMock,
-    });
-
-    result.current.mutate(mockCreateSampleData);
-
-    await waitFor(() => {
-      expect(result.current.isError).toBe(true);
-    });
-
-    expect(onErrorMock).toHaveBeenCalledWith(error, mockCreateSampleData, undefined);
-  });
-});
+### Complete CRUD Mutation Folder Structure Example
+```
+src/hooks/query/[entity]/
+├── use-create-[entity]-mutation.ts    # Create
+├── use-update-[entity]-mutation.ts    # Update
+└── use-delete-[entity]-mutation.ts    # Delete
 ```
 
 ## Best Practices
