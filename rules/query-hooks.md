@@ -99,9 +99,9 @@ export type UseSearch[Entity]sQueryArgs = Omit<
 
 export function useSearch[Entity]sQuery({ payload,  ...args }: UseSearch[Entity]sQueryArgs) {
   return useQuery({
+    ...args,
     queryKey: ['/[entity]s', '/search', payload],
     queryFn: () => search[Entity]s(payload),
-    ...args,
   });
 }
 ```
